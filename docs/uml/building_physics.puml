@@ -1,0 +1,115 @@
+@startuml
+' odeon.model.building_physics
+
+enum odeon.model.building_physics.AdjacentEnvironment {
+	{field}{static}GROUND: ground
+	{field}{static}AIR: air
+	{field}{static}UNHEATED: unheated
+}
+enum odeon.model.building_physics.MassDistribution {
+	{field}{static}MASS_CONCENTRATED_INSIDE: mass_concentrated_inside
+	{field}{static}MASS_CONCENTRATED_OUTSIDE: mass_concentrated_outside
+	{field}{static}MASS_CONCENTRATED_INSIDE_OUTSIDE: mass_splited_inside_outside
+	{field}{static}MASS_CONCENTRATED_CONSISTENT: mass_distributed_consistent
+	{field}{static}MASS_CONCENTRATED_CENTRAL: mass_concentrated_central
+}
+enum odeon.model.building_physics.Transparency {
+	{field}{static}TRANSPARENT: transparent
+	{field}{static}OPAQUE: opaque
+}
+enum odeon.model.building_physics.WindowType {
+	{field}{static}TRIPLE_THERMAL_INSULATION_GLAZING_FOR_PASSIVE_HOUSE: triple_thermal_insulation_glazing_for_passive_house
+	{field}{static}TRIPLE_THERMAL_INSULATION_GLAZING: triple_thermal_insulation_glazing
+	{field}{static}DOUBLE_THERMAL_INSULATION_GLAZING: double_thermal_insulation_glazing
+}
+class odeon.model.building_physics.BuildingThermalZone {
+	#_heattranscoef_ventilation_w_per_sqm_k: Temporal
+	#_indoor_temperature_setpoint: Temporal
+	#_indoor_temperature: Temporal
+	#_operative_temperature: Temporal
+	#_internal_solar_gains: Temporal
+	+heated_area: float
+	+envelope_surface_area: float
+	+heated_volume: float
+	+internal_heat_capacity_j_per_k: float
+	+heattranscoef_thermal_bridges_w_per_sqm_k: float
+	+heatloss_ventilation: float
+	+heatloss_thermal_bridges: float
+	+internal_heat_gains: float
+	+air_exchange_rate_use: float
+	..
+	+heattranscoef_ventilation_w_per_sqm_k (property)
+	+indoor_temperature (property)
+	+indoor_temperature_setpoint (property)
+	+internal_solar_gains (property)
+	+operative_temperature (property)
+	__
+}
+odeon.model.base.Object <|-- odeon.model.building_physics.BuildingThermalZone
+class odeon.model.building_physics.DoorPhysics {
+	#_ambient_temperature: Temporal
+	#_direct_solar_irradiance: Temporal
+	#_diffuse_solar_irradiance: Temporal
+	+material: str
+	+u_value_w_per_sqm_k: float
+	+structure: dict
+	+construction_type: str
+	+transparency: Transparency
+	+shading_factor: float
+	+view_factor: float
+	#_total_solar_irradiance: DataFrame
+}
+odeon.model.building_physics.ElementPhysics <|-- odeon.model.building_physics.DoorPhysics
+class odeon.model.building_physics.ElementPhysics {
+	#_ambient_temperature: Temporal
+	#_direct_solar_irradiance: Temporal
+	#_diffuse_solar_irradiance: Temporal
+	+material: str
+	+u_value_w_per_sqm_k: float
+	+structure: dict
+	+construction_type: str
+	+transparency: Transparency
+	+shading_factor: float
+	+view_factor: float
+	#_total_solar_irradiance: DataFrame
+	..
+	+ambient_temperature (property)
+	+diffuse_solar_irradiance (property)
+	+direct_solar_irradiance (property)
+	+total_solar_irradiance (property)
+	__
+}
+odeon.model.base.Object <|-- odeon.model.building_physics.ElementPhysics
+class odeon.model.building_physics.FloorPhysics {
+	#_ground_temperature: Temporal
+	+heat_capacity_soil: float
+	..
+	+ground_temperature (property)
+	__
+}
+odeon.model.building_physics.OpaqueElementPhysics <|-- odeon.model.building_physics.FloorPhysics
+class odeon.model.building_physics.OpaqueElementPhysics {
+	+specific_heat_capacity_j_per_sqm_k: float
+	+mass_distribution: MassDistribution
+	+insulation_thickness: float
+}
+odeon.model.building_physics.ElementPhysics <|-- odeon.model.building_physics.OpaqueElementPhysics
+class odeon.model.building_physics.RoofPhysics {
+	+specific_heat_capacity_j_per_sqm_k: float
+	+mass_distribution: MassDistribution
+	+insulation_thickness: float
+}
+odeon.model.building_physics.OpaqueElementPhysics <|-- odeon.model.building_physics.RoofPhysics
+class odeon.model.building_physics.WallPhysics {
+	+specific_heat_capacity_j_per_sqm_k: float
+	+mass_distribution: MassDistribution
+	+insulation_thickness: float
+}
+odeon.model.building_physics.OpaqueElementPhysics <|-- odeon.model.building_physics.WallPhysics
+class odeon.model.building_physics.WindowPhysics {
+	+total_solar_energy_transmittance: float
+	+frame_portion: float
+	+window_type: WindowType
+}
+odeon.model.building_physics.ElementPhysics <|-- odeon.model.building_physics.WindowPhysics
+@enduml

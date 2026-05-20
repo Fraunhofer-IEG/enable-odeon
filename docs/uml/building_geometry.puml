@@ -1,0 +1,64 @@
+@startuml
+' odeon.model.building_geometry
+
+enum odeon.model.building_geometry.RoofType {
+	{field}{static}GABLE: gable
+	{field}{static}FLAT: flat
+	{field}{static}SHED: shed
+	{field}{static}OTHER: other
+}
+class odeon.model.building_geometry.BuildingGeometry {
+	+floor_geometries: list[Geometry]
+	+wall_geometries: list[Geometry]
+	+roof_geometries: list[Geometry]
+	+window_wall_geometries: list[Geometry]
+	+window_roof_geometries: list[Geometry]
+	+door_geometries: list[Geometry]
+	+footprint: Geometry
+	+altitude: float
+	#_footprint_area: float
+	+dimensions: tuple
+	+roof_type: RoofType
+	+building_height: float
+	+eaves_height: float
+	+roof_height: float
+	+roof_height_net: float
+	+roof_tilt: float
+	+roof_length: float
+	+overhang_height: float
+	+overhang_length: float
+	+overhang_width: float
+	+roof_orientation: float
+	+ridge_orientation: float
+	+roof_orientation_cardinal: CardinalOrientation
+	+ridge_orientation_cardinal: CardinalOrientation
+	+long_ridged_roof: bool
+	+single_roof_width: float
+	+single_roof_width_net: float
+	+window_wall_factor: float | tuple[float, float] | dict[CardinalOrientation, float]
+	+door_factor: float | tuple[float, float] | dict[CardinalOrientation, float]
+	+window_roof_factor: float | tuple[CardinalOrientation, float]
+	+window_roof_vertical: bool
+	..
+	+footprint_area (property)
+	+geometries (property)
+	+roof_area (property)
+	+window_geometries (property)
+	__
+}
+odeon.model.base.Object <|-- odeon.model.building_geometry.BuildingGeometry
+odeon.model.building_geometry.BuildingGeometry *-- odeon.model.geometry.Geometry
+odeon.model.building_geometry.BuildingGeometry *-- odeon.model.building_geometry.RoofType
+odeon.model.building_geometry.BuildingGeometry *-- odeon.model.base_geometry.CardinalOrientation
+odeon.model.building_geometry.BuildingGeometry *-- odeon.model.base_geometry.CardinalOrientation
+class odeon.model.building_geometry.FootprintNominalBuildingGeometry {
+}
+odeon.model.building_geometry.BuildingGeometry <|-- odeon.model.building_geometry.FootprintNominalBuildingGeometry
+class odeon.model.building_geometry.RoofedCuboidBuildingGeometry {
+	..
+	+footprint (property)
+	__
+	+element_with_orientation(self, element_type, direction, allow_antiparallel)
+}
+odeon.model.building_geometry.BuildingGeometry <|-- odeon.model.building_geometry.RoofedCuboidBuildingGeometry
+@enduml

@@ -1,0 +1,73 @@
+@startuml
+' odeon.model.energy
+
+enum odeon.model.energy.Medium {
+	{field}{static}ENERGY: ('energy', [])
+	{field}{static}ELECTRIC_ENERGY: ('electric energy', ['ENERGY'])
+	{field}{static}THERMAL_ENERGY: ('thermal energy', ['ENERGY'])
+	{field}{static}CHEMICAL_ENERGY: ('chemical energy', ['ENERGY'])
+	{field}{static}EM_RADIATION_ENERGY: ('EM radiation energy', ['ENERGY'])
+	{field}{static}AIR_THERMAL_ENERGY: ('air thermal energy', ['THERMAL_ENERGY'])
+	{field}{static}WATER_THERMAL_ENERGY: ('water thermal energy', ['THERMAL_ENERGY'])
+	{field}{static}BRINE_THERMAL_ENERGY: ('brine thermal energy', ['THERMAL_ENERGY'])
+	{field}{static}WATER_THERMAL_ENERGY_LO: ('water thermal energy, LT', ['WATER_THERMAL_ENERGY'])
+	{field}{static}WATER_THERMAL_ENERGY_MED: ('water thermal energy, MT', ['WATER_THERMAL_ENERGY'])
+	{field}{static}WATER_THERMAL_ENERGY_HI: ('water thermal energy, HT', ['WATER_THERMAL_ENERGY'])
+	{field}{static}LIQUID_CHEMICAL_ENERGY: ('liquid chemical energy', ['CHEMICAL_ENERGY'])
+	{field}{static}GASEOUS_CHEMICAL_ENERGY: ('gaseous chemical energy', ['CHEMICAL_ENERGY'])
+	{field}{static}SOLID_CHEMICAL_ENERGY: ('solid chemical energy', ['CHEMICAL_ENERGY'])
+	{field}{static}SOLAR_ENERGY: ('solar energy', ['EM_RADIATION_ENERGY'])
+	{field}{static}FUEL_OIL: ('fuel oil', ['LIQUID_CHEMICAL_ENERGY'])
+	{field}{static}NATURAL_GAS: ('natural gas', ['GASEOUS_CHEMICAL_ENERGY'])
+	{field}{static}SYNGAS: ('syngas', ['GASEOUS_CHEMICAL_ENERGY'])
+	{field}{static}BIOGAS: ('biogas', ['GASEOUS_CHEMICAL_ENERGY'])
+	{field}{static}HYDROGEN: ('hydrogen', ['GASEOUS_CHEMICAL_ENERGY'])
+	{field}{static}BIOMASS: ('biomass', ['SOLID_CHEMICAL_ENERGY'])
+	{field}{static}BIOMASS_WOODCHIPS: ('biomass: woodchips', ['BIOMASS'])
+	{field}{static}BIOMASS_PELLETS: ('biomass: pellets', ['BIOMASS'])
+	{field}{static}BIOMASS_WOODLOGS: ('biomass: woodlogs', ['BIOMASS'])
+	get_by_label(cls, label)
+}
+class odeon.model.energy.DagNode {
+	+name: str
+	#_parents: list
+	#_children: list
+	..
+	+children (property)
+	+digraph (property)
+	+parents (property)
+	+roots (property)
+	+subs (property)
+	+supers (property)
+	__
+	#_add_parent(self, parent)
+	+add_child(self, children)
+	+closest_common_super(self, other)
+	+closest_common_super_multi(self, nodes)
+	+edge_tuples(self, recursive)
+	+inferiority(self, other)
+	+superiority(self, other)
+}
+class odeon.model.energy.MediumManager {
+	#_build_dag(self)
+	+closest_common_super(self, medium1, medium2)
+	+closest_common_super_multi(self, mediums)
+	+generalizes(self, medium1, medium2, include_same)
+	+is_linear(self, medium1, medium2, include_same)
+	+specifies(self, medium1, medium2, include_same)
+	+subs(self, medium)
+	+superiority(self, medium1, medium2)
+	+supers(self, medium)
+}
+class odeon.model.energy.Singleton {
+}
+class odeon.model.energy.TypeDagNode {
+	+name: str
+	#_parents: list
+	#_children: list
+	+generalizes(self, other, include_same)
+	+is_linear(self, other, include_same)
+	+specifies(self, other, include_same)
+}
+odeon.model.energy.DagNode <|-- odeon.model.energy.TypeDagNode
+@enduml

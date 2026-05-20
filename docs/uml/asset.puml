@@ -1,0 +1,46 @@
+@startuml
+' odeon.model.asset
+
+class odeon.model.asset.Asset {
+	#_expenses: list[Expense]
+	#_decision: AssetDecision
+	+dimension: float
+	+dimension_min: float
+	+dimension_max: float
+	#_exists: bool
+	+type: dict[str, Any]
+	+lifetime_nominal: float
+	+lifetime_remaining: float
+	+space: float
+	..
+	+decision (property)
+	+existence (property)
+	+exists (property)
+	+expenses (property)
+	__
+	+add_expenses(self, expenses)
+	+calc_annuities(self, expense_types, exclude_expense_types, expense_classes, exclude_expense_classes, name, include_virtuals)
+	+calc_expenses(self, expense_types, exclude_expense_types, expense_classes, exclude_expense_classes, name, include_virtuals)
+	+get_expense(self, expense_types, exclude_expense_types, expense_classes, exclude_expense_classes, name, not_found)
+	+get_expenses(self, expense_types, exclude_expense_types, expense_classes, exclude_expense_classes, name)
+	+remove_expenses(self, expenses)
+}
+odeon.model.base.GeometryObject <|-- odeon.model.asset.Asset
+class odeon.model.asset.AssetGroup {
+	#_assets: list[Asset]
+	#_ALLOWED_ASSET_TYPES: list[Type]
+	..
+	+assets (property)
+	__
+	+add_asset(self, asset)
+	+remove_asset(self, asset)
+}
+odeon.model.asset.Asset <|-- odeon.model.asset.AssetGroup
+odeon.model.asset.AssetGroup *-- odeon.model.asset.Asset
+class odeon.model.asset.CombiAsset {
+	#_assets: list[Asset]
+	#_ASSET_TYPES: list[Type]
+	+get_asset(self, asset_type)
+}
+odeon.model.asset.Asset <|-- odeon.model.asset.CombiAsset
+@enduml

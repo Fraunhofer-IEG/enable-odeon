@@ -1,0 +1,60 @@
+version: 1
+disable_existing_loggers: true # ensure previously configured third-party loggers don't leak handlers/levels
+
+formatters:
+  simple:
+    format: "%(asctime)s %(levelname)s %(name)s: %(message)s"
+  simpler:
+    format: "%(levelname)s %(name)s: %(message)s"
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: simpler
+    stream: ext://sys.stdout
+  debugfile_enable:
+    class: logging.FileHandler
+    level: DEBUG
+    formatter: simple
+    mode: w
+    filename: out/debug.log
+  infofile_enable:
+    class: logging.FileHandler
+    level: INFO
+    formatter: simple
+    mode: w
+    filename: out/info.log
+  debugfile_all:
+    class: logging.FileHandler
+    level: DEBUG
+    formatter: simple
+    mode: w
+    filename: out/debug_all.log
+  infofile_all:
+    class: logging.FileHandler
+    level: INFO
+    formatter: simple
+    mode: w
+    filename: out/info_all.log
+
+loggers:
+  enable: # for enable tools
+    level: DEBUG
+    handlers:
+      [console, debugfile_enable, infofile_enable, debugfile_all, infofile_all]
+    propagate: false
+  odeon:
+    level: DEBUG # raise to DEBUG here if you want internal debug output
+    handlers:
+      [console, debugfile_enable, infofile_enable, debugfile_all, infofile_all]
+    propagate: false
+  script: # base logger for user scripts (e.g. "script.my_stuff")
+    level: DEBUG
+    handlers:
+      [console, debugfile_enable, infofile_enable, debugfile_all, infofile_all]
+    propagate: false
+
+root:
+  level: INFO
+  handlers: [debugfile_all, infofile_all]

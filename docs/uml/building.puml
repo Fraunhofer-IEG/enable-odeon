@@ -1,0 +1,204 @@
+@startuml
+' odeon.model.building
+
+enum odeon.model.building.BuildingAgeGroup {
+	{field}{static}BELOW_1860: ('1859_or_below', -9999, 1859)
+	{field}{static}BETWEEN_1860_AND_1918: ('between_1860_and_1918', 1860, 1918)
+	{field}{static}BETWEEN_1919_AND_1948: ('between_1919_and_1948', 1919, 1948)
+	{field}{static}BETWEEN_1949_AND_1957: ('between_1949_and_1957', 1949, 1957)
+	{field}{static}BETWEEN_1958_AND_1968: ('between_1958_and_1968', 1958, 1968)
+	{field}{static}BETWEEN_1969_AND_1978: ('between_1969_and_1978', 1969, 1978)
+	{field}{static}BETWEEN_1979_AND_1983: ('between_1979_and_1983', 1979, 1983)
+	{field}{static}BETWEEN_1984_AND_1994: ('between_1984_and_1994', 1984, 1994)
+	{field}{static}BETWEEN_1995_AND_2001: ('between_1995_and_2001', 1995, 2001)
+	{field}{static}BETWEEN_2002_AND_2009: ('between_2002_and_2009', 2002, 2009)
+	{field}{static}BETWEEN_2010_AND_2015: ('between_2010_and_2015', 2010, 2015)
+	{field}{static}ABOVE_2015: ('above_2015', 2016, 9999)
+	{field}{static}BELOW_1979: ('1978_or_below', -9999, 1978)
+	{field}{static}BETWEEN_1979_AND_2010: ('between_1979_and_2009', 1979, 2010)
+	{field}{static}ABOVE_2010: ('2010_or_above', 2011, 9999)
+}
+enum odeon.model.building.BuildingType {
+	{field}{static}DETACHED: detached
+	{field}{static}TERRACED: terraced
+	{field}{static}MINOR: minor
+	{field}{static}HIGHRISE: highrise
+}
+enum odeon.model.building.EfficiencyLevel {
+	{field}{static}WSVO77: WSVO 77
+	{field}{static}WSVO82: WSVO 82
+	{field}{static}WSVO95: WSVO 95
+	{field}{static}ENEV2002_NIEDGRIGENERGIEHAUS: EnEV 2002 - Niedrigenergiehaus
+	{field}{static}ENEV2004_KFW_60: EnEV 2004 - KfW-60
+	{field}{static}ENEV2004_KFW_40: EnEV 2004 - KfW-40
+	{field}{static}ENEV2007_KFW_70: EnEV 2007 - KfW-70
+	{field}{static}ENEV2007_KFW_55: EnEV 2007 - KfW-55
+	{field}{static}ENEV2009_KFW_100: EnEV 2009 - KfW-100
+	{field}{static}ENEV2009_KFW_85: EnEV 2009 - KfW-85
+	{field}{static}ENEV2009_KFW_70: EnEV 2009 - KfW-70
+	{field}{static}ENEV2009_KFW_55: EnEV 2009 - KfW-55
+	{field}{static}ENEV2009_KFW_40: EnEV 2009 - KfW-40
+	{field}{static}ENEV2014_KFW_DENKMAL: EnEV 2014 - KfW-Denkmal
+	{field}{static}ENEV2014_KFW_115: EnEV 2014 - KfW-115
+	{field}{static}ENEV2014_KFW_100: EnEV 2014 - KfW-100
+	{field}{static}ENEV2014_KFW_85: EnEV 2014 - KfW-85
+	{field}{static}ENEV2014_KFW_70: EnEV 2014 - KfW-70
+	{field}{static}ENEV2014_KFW_55: EnEV 2014 - KfW-55
+	{field}{static}ENEV2014_KFW_40: EnEV 2014 - KfW-40
+	{field}{static}GEG2020: GEG 2020
+	{field}{static}GEG2023: GEG 2023
+	{field}{static}PASSIVHAUS: Passivhaus
+	{field}{static}SONNENHAUS: Sonnenhaus
+	{field}{static}NULLENERGIEHAUS: Nullenergiehaus
+	{field}{static}PLUSENERGIEHAUS: Plusenergiehaus
+	{field}{static}EG_40: EG 40
+	{field}{static}EG_55: EG 55
+	{field}{static}EGB_40: EGB 40
+	{field}{static}EGB_55: EGB 55
+}
+enum odeon.model.building.RefurbishmentStatus {
+	{field}{static}EXISTING_STATE: ('existing_state', 0)
+	{field}{static}STANDARD_REFURBISHMENT: ('standard_refurbishment', 1)
+	{field}{static}AMBITIOUS_REFURBISHMENT: ('ambitious_refurbishment', 2)
+	{field}{static}INDIVIDUAL_REFURBISHMENT: ('individual_refurbishment', 3)
+}
+enum odeon.model.building.Use {
+	{field}{static}UNKNOWN: unknown
+	{field}{static}MIXED: mixed
+	{field}{static}COMMERCIAL: commercial
+	{field}{static}SINGLE_FAMILY: singlefamily
+	{field}{static}MULTI_FAMILY: multifamily
+	{field}{static}APARTMENTBLOCK: apartmentblock
+	{field}{static}RESIDENTIAL: residential
+	{field}{static}MINOR: minor
+}
+class odeon.model.building.Address {
+	+country: str
+	+state: str
+	+province: str
+	+city: str
+	+postalcode: str
+	+street: str
+	+housenumber: str
+	+to_string(self)
+}
+class odeon.model.building.Building {
+	#_building_thermal_zone: BuildingThermalZone
+	#_building_geometry_nominal: FootprintNominalBuildingGeometry
+	#_building_geometry_cuboid: RoofedCuboidBuildingGeometry
+	#_building_elements: list
+	#_building_units: list
+	#_decision: BuildingDecision
+	+unit_distribution: dict
+	+heating_system_info: dict
+	+number_of_floors: int
+	#_expenses: list
+	#_postal_code: str
+	#_nuts_3: str
+	#_exists: bool
+	#_year_of_construction: int
+	#_year_of_construction_range: tuple
+	#_usable_area: float
+	#_gross_floor_area: float
+	#_building_type: BuildingType
+	#_refurbishment_status: RefurbishmentStatus
+	#_detailed_refurbishment_status: dict
+	#_efficiency_level: EfficiencyLevel
+	#_norm_heating_load: float
+	#_address: Address
+	..
+	+address (property)
+	+building_age_group (property)
+	+building_elements (property)
+	+building_geometry (property)
+	+building_geometry_cuboid (property)
+	+building_geometry_nominal (property)
+	+building_thermal_zone (property)
+	+building_type (property)
+	+building_units (property)
+	+commercial_types (property)
+	+commercials (property)
+	+construction_expenses (property)
+	+decision (property)
+	+detailed_refurbishment_status (property)
+	+dominant_commercial_type (property)
+	+efficiency_level (property)
+	+envelope_surface_area (property)
+	+existence (property)
+	+exists (property)
+	+expenses (property)
+	+gross_floor_area (property)
+	+households (property)
+	+n_wallboxes (property)
+	+net_site_area (property)
+	+norm_heating_load (property)
+	+nuts_3 (property)
+	+postal_code (property)
+	+refurbishment_status (property)
+	+residents (property)
+	+transformation_expenses (property)
+	+usable_area (property)
+	+usable_area_unassigned (property)
+	+use (property)
+	+year_of_construction (property)
+	+year_of_construction_range (property)
+	__
+	+add_building_elements(self, building_elements)
+	+add_building_units(self, building_units)
+	+add_expenses(self, expense)
+	+get_deg_connection(self)
+	+get_dhn_connection(self)
+	+get_expenses(self, expense_types)
+	+has_dhn_connection(self)
+	+remove_building_elements(self, building_elements)
+	+remove_building_units(self, building_units)
+}
+odeon.model.building.Structure <|-- odeon.model.building.Building
+odeon.model.building.Building *-- odeon.model.building_physics.BuildingThermalZone
+odeon.model.building.Building *-- odeon.model.building_geometry.FootprintNominalBuildingGeometry
+odeon.model.building.Building *-- odeon.model.building_geometry.RoofedCuboidBuildingGeometry
+odeon.model.building.Building *-- odeon.model.decision.BuildingDecision
+odeon.model.building.Building *-- odeon.model.building.BuildingType
+odeon.model.building.Building *-- odeon.model.building.RefurbishmentStatus
+odeon.model.building.Building *-- odeon.model.building.EfficiencyLevel
+odeon.model.building.Building *-- odeon.model.building.Address
+class odeon.model.building.Site {
+	+suitable: dict[str, bool]
+}
+odeon.model.base.GeometryObject <|-- odeon.model.building.Site
+odeon.model.device.SolarSurfaceHost <|-- odeon.model.building.Site
+odeon.model.energy_system.EnergySystemHost <|-- odeon.model.building.Site
+odeon.model.building.WeatherHost <|-- odeon.model.building.Site
+class odeon.model.building.Structure {
+	#_site: Site
+	..
+	+geometry (property)
+	+site (property)
+	__
+	+get_dominant_building_unit_type(self)
+}
+odeon.model.energy_system.EnergySystemHost <|-- odeon.model.building.Structure
+odeon.model.building.WeatherHost <|-- odeon.model.building.Structure
+odeon.model.building.Structure *-- odeon.model.building.Site
+class odeon.model.building.StructureGroup {
+	#_structures: list
+	..
+	+structures (property)
+	__
+	+add_structures(self, structures)
+	+remove_structures(self, structures)
+}
+odeon.model.building.Structure <|-- odeon.model.building.StructureGroup
+class odeon.model.building.Vicinity {
+	#_energy_system: EnergySystem
+}
+odeon.model.energy_system.EnergySystemHost <|-- odeon.model.building.Vicinity
+class odeon.model.building.WeatherHost {
+	#_weather: Weather
+	..
+	+weather (property)
+	__
+}
+odeon.model.base.Object <|-- odeon.model.building.WeatherHost
+odeon.model.building.WeatherHost *-- odeon.model.environment.Weather
+@enduml

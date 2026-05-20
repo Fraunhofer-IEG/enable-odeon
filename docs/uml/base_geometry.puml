@@ -1,0 +1,32 @@
+@startuml
+' odeon.model.base_geometry
+
+enum odeon.model.base_geometry.CardinalOrientation {
+	{field}{static}NORTH: ('N', 0)
+	{field}{static}NORTHEAST: ('NE', 45)
+	{field}{static}EAST: ('E', 90)
+	{field}{static}SOUTHEAST: ('SE', 135)
+	{field}{static}SOUTH: ('S', 180)
+	{field}{static}SOUTHWEST: ('SW', 225)
+	{field}{static}WEST: ('W', 270)
+	{field}{static}NORTHWEST: ('NW', 315)
+	by_letter(cls, letter)
+	by_closest_degrees(cls, degrees)
+}
+class odeon.model.base_geometry.Projector {
+	#_origin: Point
+	#_transformers_to: dict
+	#_transformers_from: dict
+	..
+	+origin_lat_lon (property)
+	+origin_lon_lat (property)
+	+proj_str (property)
+	__
+	+from_crs(self, shape, from_srid, order)
+	+from_wgs84(self, shape, order)
+	+lat_lon(self, shape)
+	+lon_lat(self, shape)
+	+to_crs(self, shape, to_srid, order)
+	+to_wgs84(self, shape, order)
+}
+@enduml

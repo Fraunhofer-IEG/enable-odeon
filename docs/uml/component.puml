@@ -1,0 +1,148 @@
+@startuml
+' odeon.model.component
+
+class odeon.model.component.Component {
+	#_input_sockets: list
+	#_output_sockets: list
+	#_input_factors: dict
+	#_output_factors: dict
+	#_activity: pandas.core.series.Series | bool
+	..
+	+acitvity (property)
+	+activity (property)
+	+components (property)
+	+energy_system (property)
+	+following_components (property)
+	+input (property)
+	+input_components (property)
+	+input_flow (property)
+	+input_flow_electric (property)
+	+input_flow_thermal (property)
+	+input_flows (property)
+	+input_socket (property)
+	+input_sockets (property)
+	+is_intermediate (property)
+	+is_sink (property)
+	+is_source (property)
+	+linked_components (property)
+	+output (property)
+	+output_components (property)
+	+output_flow (property)
+	+output_flow_electric (property)
+	+output_flow_thermal (property)
+	+output_flows (property)
+	+output_socket (property)
+	+output_sockets (property)
+	+previous_components (property)
+	+sockets (property)
+	__
+	#_is_valid_activity(self, activity)
+	#_linked_components(self, inputs, outputs, seen)
+	#_set_factor(self, socket, factor)
+	+add_input(self, new, medium, flow, factor)
+	+add_input_socket(self, socket, factor)
+	+add_output(self, new, medium, flow, factor)
+	+add_output_socket(self, socket, factor)
+	+apply_activity(self, reset_activity)
+	+find_following_components(self, type)
+	+find_linked_components(self, type)
+	+find_previous_components(self, type)
+	+get_closest_socket_pair(self, input, output, medium_considered, ignore_missing_mediums, if_multiple)
+	+get_common_medium(self)
+	+get_factor(self, at)
+	+get_flow(self, at)
+	+get_input_factor(self, at)
+	+get_input_flow(self, at)
+	+get_input_links(self)
+	+get_input_mediums(self, medium_considered)
+	+get_input_socket(self, at, medium_relation, medium_considered)
+	+get_input_sockets(self, at, medium_considered, medium_relation)
+	+get_link(self, at, direction)
+	+get_links(self)
+	+get_output_factor(self, at)
+	+get_output_flow(self, at)
+	+get_output_links(self)
+	+get_output_mediums(self, medium_considered)
+	+get_output_socket(self, at, medium_relation, medium_considered)
+	+get_output_sockets(self, at, medium_considered, medium_relation)
+	+get_socket(self, at, medium_relation, medium_considered)
+	+get_sockets(self, at, medium_relation, medium_considered)
+	+remove_input(self, at)
+	+remove_output(self, at)
+	+set_factor(self, factor)
+	+set_input(self, new, at, medium, flow, factor)
+	+set_input_factor(self, factor, at)
+	+set_input_flow(self, flow, at)
+	+set_output(self, new, at, medium, flow, factor)
+	+set_output_factor(self, factor, at)
+	+set_output_flow(self, flow, at)
+}
+odeon.model.base.Object <|-- odeon.model.component.Component
+class odeon.model.component.FixedComponent {
+	#_INPUT_MEDIUMS: list
+	#_OUTPUT_MEDIUMS: list
+	-__fixed: bool
+}
+odeon.model.component.Component <|-- odeon.model.component.FixedComponent
+class odeon.model.component.Link {
+	#_flow_location: odeon.model.component.Socket | None
+	#_flow: Temporal
+	..
+	+activity (property)
+	+components (property)
+	+flow (property)
+	+from_ (property)
+	+from_socket (property)
+	+is_abstract (property)
+	+medium (property)
+	+sockets (property)
+	+to_ (property)
+	+to_socket (property)
+	__
+	#_set_flow(self, flow, socket)
+	+other_component(self, this)
+	+other_socket(self, this)
+}
+odeon.model.base.Object <|-- odeon.model.component.Link
+class odeon.model.component.Socket {
+	#_link: odeon.model.component.Link | None
+	#_other: odeon.model.component.Socket | None
+	#_medium: odeon.model.energy.Medium | None
+	#_activity: pandas.core.series.Series | bool
+	..
+	+activity (property)
+	+flow (property)
+	+is_abstract (property)
+	+is_input_socket (property)
+	+is_output_socket (property)
+	+link (property)
+	+medium (property)
+	+other (property)
+	__
+	#_is_valid_activity(self, activity)
+	#_remove_link(self, reciproke)
+	+apply_activity(self, reset_activity, overlay)
+	+get_medium(self, medium_considered)
+	+remove_other(self)
+}
+odeon.model.base.Object <|-- odeon.model.component.Socket
+class odeon.model.component.ThermalComponent {
+	#_flow_temperature_forward: dict
+	#_flow_temperature_return: dict
+	..
+	+input_forward_temperature (property)
+	+input_return_temperature (property)
+	+output_forward_temperature (property)
+	+output_return_temperature (property)
+	+thermal_input_flow (property)
+	+thermal_output_flow (property)
+	__
+	#_get_flow_temperature(self, direction, at, symmetric)
+	#_set_flow_temperature(self, flow_temperature, direction, at, symmetric)
+	+get_flow_forward_temperature(self, at, symmetric)
+	+get_flow_return_temperature(self, at, symmetric)
+	+set_flow_forward_temperature(self, flow_temperature, at, symmetric)
+	+set_flow_return_temperature(self, flow_temperature, at, symmetric)
+}
+odeon.model.component.Component <|-- odeon.model.component.ThermalComponent
+@enduml

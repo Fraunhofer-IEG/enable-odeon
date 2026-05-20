@@ -1,0 +1,41 @@
+{
+  "branch_id": 3046,
+  "objects": {
+    "3047": {
+      "id": 3047,
+      "class": "HeatDemand",
+      "_input_sockets": [
+        "<Socket id=3052>"
+      ],
+      "_output_sockets": [],
+      "_flow_temperature_forward": {},
+      "_flow_temperature_return": {},
+      "_input_factors": {
+        "0": "<Temporal id=3056>"
+      },
+      "_output_factors": {},
+      "name": null,
+      "labels": {},
+      "custom_data": {}
+    },
+    "3049": {
+      "id": 3049,
+      "class": "Link",
+      "_flow_location": "<Socket id=3052>",
+      "_flow": "<Temporal id=3057>",
+      "name": null,
+      "labels": {},
+      "custom_data": {}
+    },
+    "3052": {
+      "id": 3052,
+      "class": "Socket",
+      "_medium": "<Medium THERMAL_ENERGY>",
+      "_link": "<Link id=3049>",
+      "name": null,
+      "labels": {},
+      "custom_data": {},
+      "_activity": true
+    }
+  }
+}

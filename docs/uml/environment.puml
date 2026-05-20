@@ -1,0 +1,45 @@
+@startuml
+' odeon.model.environment
+
+class odeon.model.environment.Weather {
+	#_ambient_temperature: Temporal
+	#_global_horizontal_irradiance: Temporal
+	#_diffuse_horizontal_irradiance: Temporal
+	#_direct_normal_irradiance: Temporal
+	#_soil_temperature: Temporal
+	#_underground_temperature: Temporal
+	#_wind_speed: Temporal
+	#_wind_direction: Temporal
+	#_pressure: Temporal
+	#_cloud_coverage: Temporal
+	#_solar_position: dict
+	..
+	+ambient_temperature (property)
+	+cloud_coverage (property)
+	+diffuse_horizontal_irradiance (property)
+	+direct_normal_irradiance (property)
+	+global_horizontal_irradiance (property)
+	+pressure (property)
+	+soil_temperature (property)
+	+underground_temperature (property)
+	+wind_direction (property)
+	+wind_speed (property)
+	__
+	+copy(self)
+	+get_solar_position_as_df(self)
+	+get_solar_position_property(self, attr)
+	+set_solar_position(self, df)
+	+set_solar_position_property(self, attr, value)
+}
+odeon.model.base.Object <|-- odeon.model.environment.Weather
+odeon.model.environment.Weather *-- odeon.model.temporal.Temporal
+odeon.model.environment.Weather *-- odeon.model.temporal.Temporal
+odeon.model.environment.Weather *-- odeon.model.temporal.Temporal
+odeon.model.environment.Weather *-- odeon.model.temporal.Temporal
+odeon.model.environment.Weather *-- odeon.model.temporal.Temporal
+odeon.model.environment.Weather *-- odeon.model.temporal.Temporal
+odeon.model.environment.Weather *-- odeon.model.temporal.Temporal
+odeon.model.environment.Weather *-- odeon.model.temporal.Temporal
+odeon.model.environment.Weather *-- odeon.model.temporal.Temporal
+odeon.model.environment.Weather *-- odeon.model.temporal.Temporal
+@enduml

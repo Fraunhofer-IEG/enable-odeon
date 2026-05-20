@@ -1,0 +1,112 @@
+@startuml
+' odeon.model.geometry
+
+class odeon.model.geometry.Geometry {
+	#_shape: BaseGeometry
+	+altitude: float
+	..
+	+centroid (property)
+	+has_z (property)
+	+is_point (property)
+	+is_polygon (property)
+	+longitude_latitude_linestring (property)
+	+polygon (property)
+	+shape (property)
+	__
+	+lat_lon(self, projector)
+	+lon_lat(self, projector)
+	+shape_in_crs(self, to_srid, projector, order)
+	+shape_in_wgs84(self, projector, order)
+}
+class odeon.model.geometry.LinestringGeometry {
+	#_shape: BaseGeometry
+	+altitude: float
+	..
+	+edges_linestring (property)
+	+edges_pointpairs (property)
+	+height (property)
+	+horizontal (property)
+	+length_beeline (property)
+	+length_beeline_projected (property)
+	+length_path (property)
+	+length_path_projected (property)
+	+xyz_by_axis (property)
+	+xyz_by_point (property)
+	+z_max (property)
+	+z_min (property)
+	__
+	+points(self, apply_altitude)
+}
+odeon.model.geometry.Geometry <|-- odeon.model.geometry.LinestringGeometry
+class odeon.model.geometry.MultiGeometry {
+	#_shape: BaseMultipartGeometry
+	..
+	+is_multipolygon (property)
+	__
+}
+odeon.model.geometry.Geometry <|-- odeon.model.geometry.MultiGeometry
+class odeon.model.geometry.NominalGeometry {
+	+dimensions_nominal: tuple
+	+dimensions_projected_nominal: tuple
+	+area_nominal: float
+	+area_projected_nominal: float
+	+height: float
+	+tilt: float
+	+azimuth: float
+	+azimuth_cardinal: CardinalOrientation
+	..
+	+area (property)
+	+area_projected (property)
+	+dimensions (property)
+	+dimensions_projected (property)
+	+mrr (property)
+	+mrr_equal_area (property)
+	+pdr (property)
+	+pdr_equal_area (property)
+	__
+	+set_longitude_latitude(self, longitude_latitude)
+}
+odeon.model.geometry.Geometry <|-- odeon.model.geometry.NominalGeometry
+odeon.model.geometry.NominalGeometry *-- odeon.model.base_geometry.CardinalOrientation
+class odeon.model.geometry.TiltedRectangleGeometry {
+	#_shape: BaseGeometry
+	+altitude: float
+	..
+	+area (property)
+	+area_projected (property)
+	+azimuth (property)
+	+azimuth_tilt_vector (property)
+	+centroid3d (property)
+	+dimension_azimuthal (property)
+	+dimension_azimuthal_projected (property)
+	+dimension_crossazimuthal (property)
+	+dimensions (property)
+	+dimensions_projected (property)
+	+edges_linestring (property)
+	+edges_pointpairs (property)
+	+edges_vectors (property)
+	+height (property)
+	+horizontal (property)
+	+horizontal_edges (property)
+	+inclined (property)
+	+inclined_edges (property)
+	+indices_lower_upper_upward_downward_edge (property)
+	+lower_edge (property)
+	+normal_vector (property)
+	+orientations (property)
+	+tilt (property)
+	+upper_edge (property)
+	+vertical (property)
+	+z_centroid (property)
+	+z_max (property)
+	+z_min (property)
+	__
+	+normal_linestring(self, length)
+	+points(self, repeat_first_point)
+	+set_vertical_approximate_azimuth(self, approximate_azimuth)
+	+vertices(self, repeat_first_point)
+	+xyz_by_axis(self, repeat_first_point)
+	+xyz_by_point(self, repeat_first_point)
+}
+odeon.model.geometry.Geometry <|-- odeon.model.geometry.TiltedRectangleGeometry
+@enduml

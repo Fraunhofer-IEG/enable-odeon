@@ -1,0 +1,18 @@
+@startuml
+' odeon.model.region
+
+class odeon.model.region.Region {
+	+boundary: Polygon
+	+seed: Any
+}
+odeon.model.base.Organizer <|-- odeon.model.region.Region
+class odeon.model.region.Segregation {
+	#_regions: list
+	..
+	+regions (property)
+	__
+	+add_regions(self, regions)
+	+to_gdf(self)
+}
+odeon.model.base.Organizer <|-- odeon.model.region.Segregation
+@enduml

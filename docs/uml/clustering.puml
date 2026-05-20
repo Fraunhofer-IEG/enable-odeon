@@ -1,0 +1,57 @@
+@startuml
+' odeon.model.clustering
+
+class odeon.model.clustering.BinClustering {
+	#_groups: list
+	#_unclustered: Group
+}
+odeon.model.clustering.Clustering <|-- odeon.model.clustering.BinClustering
+odeon.model.clustering.BinClustering *-- odeon.model.clustering.Group
+class odeon.model.clustering.Clustering {
+	#_groups: list
+	#_unclustered: Group
+	..
+	+clustered_objects (property)
+	+groups (property)
+	+unclustered (property)
+	__
+}
+odeon.model.base.Organizer <|-- odeon.model.clustering.Clustering
+odeon.model.clustering.Clustering *-- odeon.model.clustering.Group
+class odeon.model.clustering.FactorizedClustering {
+	+factors: dict
+	..
+	+has_valid_factors (property)
+	+is_normalized (property)
+	+unique_objects (property)
+	+unique_objects_summed_factors (property)
+	__
+	+get_factor(self, group, object)
+}
+odeon.model.clustering.Clustering <|-- odeon.model.clustering.FactorizedClustering
+class odeon.model.clustering.Group {
+	#_members: list
+	#_add_assert_type(self, members, type_)
+	+add_members(self, members)
+	+remove_members(self, members)
+}
+odeon.model.base.Organizer <|-- odeon.model.clustering.Group
+class odeon.model.clustering.SpatialClustering {
+	#_segregation: Segregation
+	..
+	+segregation (property)
+	__
+	+get_group_by_region(self, region)
+}
+odeon.model.clustering.FactorizedClustering <|-- odeon.model.clustering.SpatialClustering
+odeon.model.clustering.SpatialClustering *-- odeon.model.region.Segregation
+class odeon.model.clustering.SubstituteGroup {
+	#_objects: list
+	..
+	+objects (property)
+	__
+	+add_objects(self, objects)
+	+remove_objects(self, objects)
+}
+odeon.model.clustering.Group <|-- odeon.model.clustering.SubstituteGroup
+@enduml

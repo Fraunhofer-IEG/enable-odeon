@@ -1,0 +1,49 @@
+@startuml
+' odeon.model.decision
+
+enum odeon.model.decision.DecisionState {
+	{field}{static}FIXED: fixed
+	{field}{static}UNDECIDED_EXISTING: undecided_existing
+	{field}{static}UNDECIDED_OPTION: undecided_option
+	{field}{static}UNDECIDED_SCALING: undecided_scaling
+	{field}{static}DECIDED_FOR: decided_for
+	{field}{static}DECIDED_AGAINST: decided_against
+	{field}{static}DECIDED_SCALING: decided_scaling
+	{field}{static}UNKNOWN: unknown
+}
+enum odeon.model.decision.DecisionType {
+	{field}{static}INDEPENDENT: independent
+	{field}{static}INDEPENDENT_SCALING: independent_scaling
+	{field}{static}ONLY_ONE: only_one
+	{field}{static}LINEAR_COMPETITION: linear_competition
+}
+class odeon.model.decision.AssetDecision {
+	..
+	+devices (property)
+	__
+	+add_device(self, device)
+}
+odeon.model.decision.Decision <|-- odeon.model.decision.AssetDecision
+class odeon.model.decision.BuildingDecision {
+	..
+	+buildings (property)
+	__
+	+add_building(self, building)
+}
+odeon.model.decision.Decision <|-- odeon.model.decision.BuildingDecision
+class odeon.model.decision.Decision {
+	#_objects: list[Object]
+	#_type: DecisionType
+	+decided: bool
+	..
+	+existing (property)
+	+type_ (property)
+	__
+	#_add_object(self, object)
+	+set_existing(self, object, value)
+}
+odeon.model.base.Object <|-- odeon.model.decision.Decision
+odeon.model.decision.Decision *-- odeon.model.decision.Object
+odeon.model.decision.Decision *-- odeon.model.decision.DecisionType
+odeon.model.decision.Decision *-- odeon.model.decision.bool
+@enduml

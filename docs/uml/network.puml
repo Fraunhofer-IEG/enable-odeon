@@ -1,0 +1,109 @@
+@startuml
+' odeon.model.network
+
+class odeon.model.network.Edge {
+	#_node_to: Node
+	#_node_from: Node
+	#_length: float
+	..
+	+length (property)
+	+node_from (property)
+	+node_to (property)
+	+nodes (property)
+	__
+	+common_node(self, other)
+	+connected(self, other)
+	+opposite_node(self, this)
+}
+odeon.model.network.NetworkObject <|-- odeon.model.network.Edge
+class odeon.model.network.Network {
+	#_nodes: list
+	#_edges: list
+	#_graph: Graph
+	#_digraph: DiGraph
+	..
+	+digraph (property)
+	+edges (property)
+	+graph (property)
+	+nodes (property)
+	__
+	#_remove(self, network_objects)
+	#_reset_graphs(self)
+	#_to_networkx(self, directed)
+	+add_edges(self, edges, existing_mode)
+	+add_network(self, other)
+	+add_nodes(self, nodes, existing_mode)
+	+attachments(self)
+	+categorize_edges_by_nodecount(self)
+	+clear_partitions(self)
+	+connectivity_matrix(self)
+	+detach(self, objects, edge_mode, node_mode)
+	+doublets(self, respect_direction)
+	+edge_partitions(self)
+	+get_attachments_of_type(self, attachment_types)
+	+get_by_partition(self, partition, what)
+	+get_closest_node_to_point(self, point, nodes)
+	+get_closest_node_to_shape(self, shape, nodes)
+	+get_common_nodes_from_edges(edges)
+	+get_edge_by_id(self, id)
+	+get_edges_by_node_pair(self, nodes, respect_direction, use_graph)
+	+get_edges_by_nodes(self, nodes, direction, use_graph)
+	+get_edges_of_components(self)
+	+get_empty_end_nodes(self)
+	+get_end_nodes(self)
+	+get_node_by_attachment(self, attachment)
+	+get_node_by_id(self, id, use_graph)
+	+get_node_ids_by_edge_ids(self, edge_ids)
+	+get_nodes_by_attachment_types(self, attachment_types)
+	+get_nodes_by_attachments(self, attachments)
+	+get_nodes_from_all_edges(self)
+	+get_nodes_from_edges(edges)
+	+get_nodes_of_component(self, anchor)
+	+get_nodes_of_components(self)
+	+get_nodes_with_degree(self, degree, directed)
+	+is_continuous(self, allowed_distance)
+	+is_doublet_free(self, respect_direction)
+	+is_edgecomplete(self)
+	+is_geometric(self)
+	+is_linked(self)
+	+is_loop_free(self)
+	+is_planar(self)
+	+is_valid(self)
+	+length(self, missing)
+	+loops(self)
+	+n_components(self)
+	+n_cycles(self, directed)
+	+node_partitions(self)
+	+partitions(self)
+	+pop(self, objects, edge_mode, node_mode)
+	+remove_edges(self, edges, node_mode, use_graph)
+	+remove_nodes(self, nodes, edge_mode)
+	+set_edges(self, edges)
+	+set_nodes(self, nodes)
+	+to_edge_gdf(self, attributes)
+	+to_node_gdf(self, attributes)
+}
+odeon.model.base.Object <|-- odeon.model.network.Network
+class odeon.model.network.NetworkObject {
+	#_partitions: set[str]
+	..
+	+network (property)
+	+partitions (property)
+	+partitions_list (property)
+	__
+	#_set_network(self, net)
+	+add_partition(self, partition)
+	+remove_partitions(self, partition)
+}
+odeon.model.base.GeometryObject <|-- odeon.model.network.NetworkObject
+class odeon.model.network.Node {
+	#_attachment: Object | None
+	#_elevation: float | None
+	..
+	+attachment (property)
+	+elevation (property)
+	__
+	+copy(self, deep_custom_data)
+}
+odeon.model.network.NetworkObject <|-- odeon.model.network.Node
+@enduml

@@ -1,0 +1,26 @@
+@startuml
+' odeon.io.file_adapter
+
+class odeon.io.file_adapter.FileAdapter {
+	#_dir: typing.Optional[pathlib.Path]
+	#_project: typing.Optional[ForwardRef('Project')]
+	#_branches_hdffilenames: typing.Dict[ForwardRef('Branch'), str]
+	#_branches_hdffiles: typing.Dict[ForwardRef('Branch'), h5py._hl.files.File]
+	..
+	+dir (property)
+	+project (property)
+	__
+	#_clear_branches(self)
+	#_delete_unused_hdf_files(self)
+	#_remove_unused_temporal_keys(self)
+	#_set_project(self, project)
+	+clean(self, delete_files)
+	+close_hdf_file_for_branch(self, branch)
+	+close_hdf_files(self, only_orphans)
+	+flush_hdf_files(self)
+	+get_hdf_file_for_branch(self, branch)
+	+get_hdf_path_for_branch(self, branch)
+	+write_to_dir(self, filename, overwrite)
+	+write_to_pickle(self, filename, overwrite, error_if_swapped_temporals)
+}
+@enduml

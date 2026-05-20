@@ -1,0 +1,98 @@
+@startuml
+' odeon.model.expense
+
+enum odeon.model.expense.ExpenseType {
+	{field}{static}CAPEX: capex
+	{field}{static}OPERATION: operation
+	{field}{static}MAINTENANCE: maintenance
+	{field}{static}COMMODITY: commodity
+	{field}{static}REVENUE: revenue
+	{field}{static}FUNDING: funding
+	{field}{static}OTHER: other
+	{field}{static}UNKNOWN: unknown
+}
+class odeon.model.expense.Actor {
+	#_Object__parent: odeon.model.base.Parent | None
+	#_children_attributes: dict
+	#_associated_attributes: list
+	#_temporal_attributes: list
+	#_temporal_dict_attributes: list
+}
+odeon.model.base.Object <|-- odeon.model.expense.Actor
+class odeon.model.expense.BuildingConstructionExpense {
+	+fix_value: float | None
+	+per_dimension_value: float | None
+	+period: int | None
+	+dimension_function: Optional
+	+dimension_function_kwargs: dict[str, typing.Any] | None
+	+asset_function: Optional
+	+asset_function_kwargs: dict[str, typing.Any] | None
+}
+odeon.model.expense.PerLifeExpense <|-- odeon.model.expense.BuildingConstructionExpense
+class odeon.model.expense.BuildingTransformationExpense {
+}
+odeon.model.expense.PerLifeExpense <|-- odeon.model.expense.BuildingTransformationExpense
+class odeon.model.expense.Expense {
+	#_relative_expense: tuple[odeon.model.expense.Expense, float] | None
+	#_sender: odeon.model.expense.Actor | None
+	#_receiver: odeon.model.expense.Actor | None
+	+type: odeon.model.expense.ExpenseType | None
+	+is_annuity: bool
+	+price_change_factor: float | None
+	..
+	+financing (property)
+	+is_virtual (property)
+	+price_change_factor (property)
+	+receiver (property)
+	+sender (property)
+	__
+	+calc(self)
+	+calc_annuity(self)
+}
+odeon.model.base.Object <|-- odeon.model.expense.Expense
+class odeon.model.expense.Financing {
+	+interest_rate: float
+	+observation_period: float | None
+	+price_change_factors: dict
+	+copy(self)
+}
+class odeon.model.expense.FixExpense {
+	+value: float | pandas.core.series.Series
+}
+odeon.model.expense.Expense <|-- odeon.model.expense.FixExpense
+class odeon.model.expense.PerLifeExpense {
+}
+odeon.model.expense.PerPeriodExpense <|-- odeon.model.expense.PerLifeExpense
+class odeon.model.expense.PerPeriodExpense {
+	+fix_value: float | None
+	+per_dimension_value: float | None
+	+period: int | None
+	+dimension_function: Optional
+	+dimension_function_kwargs: dict[str, typing.Any] | None
+	+asset_function: Optional
+	+asset_function_kwargs: dict[str, typing.Any] | None
+	#_calc_annuity_annual_payment(self)
+	#_calc_annuity_complex_payment(self)
+}
+odeon.model.expense.Expense <|-- odeon.model.expense.PerPeriodExpense
+class odeon.model.expense.PerThroughputExpense {
+	+socket: odeon.model.component.Socket | None
+	+value: float | pandas.core.series.Series | None
+	+value_as_annuity(self)
+}
+odeon.model.expense._DeviceExpense <|-- odeon.model.expense.PerThroughputExpense
+class odeon.model.expense.PerUsageExpense {
+	+value: float
+}
+odeon.model.expense._TransformerExpense <|-- odeon.model.expense.PerUsageExpense
+class odeon.model.expense.PerUsageTimeExpense {
+	+value: float
+}
+odeon.model.expense._TransformerExpense <|-- odeon.model.expense.PerUsageTimeExpense
+class odeon.model.expense._DeviceExpense {
+}
+odeon.model.expense.Expense <|-- odeon.model.expense._DeviceExpense
+class odeon.model.expense._TransformerExpense {
+}
+odeon.model.expense.Expense <|-- odeon.model.expense._TransformerExpense
+@enduml

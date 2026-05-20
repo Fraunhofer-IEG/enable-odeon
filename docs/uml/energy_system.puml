@@ -1,0 +1,41 @@
+@startuml
+' odeon.model.energy_system
+
+class odeon.model.energy_system.DemandAccessor {
+	#_Object__parent: odeon.model.base.Parent | None
+	#_children_attributes: dict
+	#_associated_attributes: list
+	#_temporal_attributes: list
+	#_temporal_dict_attributes: list
+	..
+	+cooling_demand (property)
+	+dhw_demand (property)
+	+electricity_demand (property)
+	+energy_system (property)
+	+heat_demand (property)
+	+heating_demand (property)
+	__
+	+get_demands(self, type, only_reachable_through, omit_reachable_through)
+	+get_summed_demand_input_flow(self, type, include_subdemands, if_empty)
+	+get_summed_demand_input_flow_total(self, type, include_subdemands, if_empty, if_none)
+	+set_demand_flow(self, type, flow)
+}
+odeon.model.base.Object <|-- odeon.model.energy_system.DemandAccessor
+class odeon.model.energy_system.EnergySystem {
+	#_components: list
+	..
+	+components (property)
+	__
+	+add_components(self, components)
+	+remove_components(self, components)
+}
+odeon.model.energy_system.DemandAccessor <|-- odeon.model.energy_system.EnergySystem
+class odeon.model.energy_system.EnergySystemHost {
+	#_energy_system: EnergySystem
+	+get_emissions_by_energy_carrier(self)
+	+get_primary_energy_demand_by_energy_carrier(self)
+	+get_total_emissions(self)
+	+get_total_primary_energy_demand(self)
+}
+odeon.model.energy_system.DemandAccessor <|-- odeon.model.energy_system.EnergySystemHost
+@enduml

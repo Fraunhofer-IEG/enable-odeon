@@ -1,0 +1,20 @@
+@startuml
+' odeon.io.temporal_manager
+
+class odeon.io.temporal_manager.TemporalManager {
+	#_settings: typing.Dict[typing.Type, str]
+	#_target: typing.Union[ForwardRef('Project'), ForwardRef('Branch')]
+	..
+	+settings (property)
+	+target (property)
+	__
+	#_set_target(self, target)
+	+apply_settings_for_object(self, base_object, deep)
+	+load_temporals(self)
+	+reset_access_counters(self)
+	+reset_swap_mode(self)
+	+set_swap_mode(self, swap_mode)
+	+swap_or_load_temporals(self, threshold_swap, threshold_load)
+	+swap_temporals(self)
+}
+@enduml

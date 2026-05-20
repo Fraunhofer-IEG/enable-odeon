@@ -1,0 +1,11 @@
+@startuml
+' odeon.model.street_grid
+
+class odeon.model.street_grid.StreetGrid {
+	#_nodes: list
+	#_edges: list
+	#_graph: Graph
+	#_digraph: DiGraph
+}
+odeon.model.network.Network <|-- odeon.model.street_grid.StreetGrid
+@enduml

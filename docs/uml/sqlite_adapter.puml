@@ -1,0 +1,20 @@
+@startuml
+' odeon.io.sqlite_adapter
+
+class odeon.io.sqlite_adapter.SQLiteAdapter {
+	#_branch_db_path(self, branch)
+	#_connect(self, path)
+	#_init_schema_branch(self, con)
+	#_init_schema_project(self, con)
+	#_project_db_path(self, project)
+	#_read_branch(self, path, metadata, restore_branch_id, restore_ids)
+	#_read_branch_into_project(self, project, path, metadata)
+	#_read_project_meta(self, db_path)
+	#_write_branch(self, branch)
+	#_write_project(self, project)
+	+list_branches(self)
+	+read_branches_into_project(self, project, branch_ids, description_contains)
+	+read_project(self)
+	+write_project(self, project)
+}
+@enduml

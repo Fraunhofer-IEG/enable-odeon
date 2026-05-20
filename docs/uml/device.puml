@@ -1,0 +1,628 @@
+@startuml
+' odeon.model.device
+
+enum odeon.model.device.BuildingDistributionType {
+	{field}{static}DISTRICT: Fernheizung (Fernwaerme)
+	{field}{static}FLOOR: Etagenheizung
+	{field}{static}BLOCK: Blockheizung
+	{field}{static}CENTRAL: Zentralheizung
+	{field}{static}SINGLE: Einzel-/Mehrraumoefen (auch Nachtspeicherheizung)
+	{field}{static}NO: Keine Heizung im Gebaeude oder in den Wohnungen
+}
+enum odeon.model.device.HeatTransformer {
+	{field}{static}BIOMASS: biomasse
+	{field}{static}DISTRICT: fernw�rme
+	{field}{static}FUEL_OIL: heiz�l
+	{field}{static}NATURAL_GAS: erdgas
+	{field}{static}HEATPUMP: w�rmepumpe
+	{field}{static}ELSE: sonstige
+	{field}{static}NO_TRANSFORMER: Kein_system
+}
+enum odeon.model.device.HeatingDistributionType {
+	{field}{static}RADIATORS: radiators
+	{field}{static}CONVECTORS: convectors
+	{field}{static}PANEL_RADIATORS: panel_radiators
+	{field}{static}TOWEL_RADIATORS: towel_radiators
+	{field}{static}FLOOR_HEATING: floor_heating
+}
+class odeon.model.device.AirAirHeatpump {
+}
+odeon.model.device.Heatpump <|-- odeon.model.device.AirAirHeatpump
+class odeon.model.device.AirHeatSource {
+}
+odeon.model.device.HeatSource <|-- odeon.model.device.AirHeatSource
+class odeon.model.device.AirWaterHeatpump {
+}
+odeon.model.device.Heatpump <|-- odeon.model.device.AirWaterHeatpump
+class odeon.model.device.Battery {
+}
+odeon.model.device.ElectricityStorage <|-- odeon.model.device.Battery
+class odeon.model.device.BiomassBoiler {
+}
+odeon.model.device.Boiler <|-- odeon.model.device.BiomassBoiler
+class odeon.model.device.BiomassChp {
+}
+odeon.model.device.Chp <|-- odeon.model.device.BiomassChp
+class odeon.model.device.BiomassSupply {
+	+fuel: Medium
+}
+odeon.model.device.Transformer <|-- odeon.model.device.BiomassSupply
+class odeon.model.device.Boiler {
+	+efficiency_nominal: float
+}
+odeon.model.device.Transformer <|-- odeon.model.device.Boiler
+odeon.model.component.ThermalComponent <|-- odeon.model.device.Boiler
+class odeon.model.device.BoosterHeatpump {
+}
+odeon.model.device.Heatpump <|-- odeon.model.device.BoosterHeatpump
+class odeon.model.device.BoreholeHeatExchanger {
+	+inner_diameter_pipe: float
+	+outer_diameter_pipe: float
+	+shank_spacing_pipe: float
+	+roughness_pipe: float
+	+conductivity_pipe: float
+	+rho_cp_pipe: float
+	+conductivity_soil: float
+	+rho_cp_soil: float
+	+conductivity_grout: float
+	+rho_cp_grout: float
+	+undisturbed_ground_temp: float
+	+drilling_depth: float
+	+buried_depth: float
+	+diameter: float
+	+simulation_length: int
+	+eft_min: float
+	+eft_max: float
+	+drilling_depth_min: float
+	+drilling_depth_max: float
+	+spacing_min: float
+	+spacing_max: float
+	+n_boreholes: int
+	+covered_area: float
+	..
+	+geothermal_coverage (property)
+	__
+}
+odeon.model.device.Transformer <|-- odeon.model.device.BoreholeHeatExchanger
+odeon.model.component.ThermalComponent <|-- odeon.model.device.BoreholeHeatExchanger
+class odeon.model.device.BoreholeThermalEnergyStorage {
+	+inner_diameter_pipe: float
+	+outer_diameter_pipe: float
+	+shank_spacing_pipe: float
+	+roughness_pipe: float
+	+conductivity_pipe: float
+	+rho_cp_pipe: float
+	+conductivity_soil: float
+	+rho_cp_soil: float
+	+conductivity_grout: float
+	+rho_cp_grout: float
+	+undisturbed_ground_temp: float
+	+drilling_depth: float
+	+buried_depth: float
+	+diameter: float
+	+simulation_length: int
+	+eft_min: float
+	+eft_max: float
+	+drilling_depth_min: float
+	+drilling_depth_max: float
+	+spacing_min: float
+	+spacing_max: float
+	+n_boreholes: int
+	+covered_area: float
+	+calc_length_per_borehole(self)
+	+calc_total_length(self)
+}
+odeon.model.device.ThermalStorage <|-- odeon.model.device.BoreholeThermalEnergyStorage
+class odeon.model.device.BrineWaterHeatpump {
+}
+odeon.model.device.Heatpump <|-- odeon.model.device.BrineWaterHeatpump
+class odeon.model.device.BuildingDhnConnection {
+	#_input_forward_setpoint_temperature: Temporal
+	#_input_return_setpoint_temperature: Temporal
+	+temperature_flex: float
+	+efficiency_nominal: float
+	..
+	+input_forward_setpoint_temperature (property)
+	+input_return_setpoint_temperature (property)
+	__
+}
+odeon.model.device.DhnConnectable <|-- odeon.model.device.BuildingDhnConnection
+class odeon.model.device.Bus {
+	#_MEDIUM: Medium
+	#_medium: Medium
+	..
+	+medium (property)
+	__
+}
+odeon.model.asset.Asset <|-- odeon.model.device.Bus
+odeon.model.component.Component <|-- odeon.model.device.Bus
+class odeon.model.device.ChargingStation {
+	+charging_points: int
+	+charger_type: str
+	+capacity: float
+	+cap_point1: float
+	+type_point1: str
+	+cap_point2: float
+	+type_point2: str
+	+cap_point3: float
+	+type_point3: str
+	+cap_point4: float
+	+type_point4: str
+}
+odeon.model.device.Transformer <|-- odeon.model.device.ChargingStation
+class odeon.model.device.ChemicalDemand {
+	#_INPUT_MEDIUMS: list
+	#_OUTPUT_MEDIUMS: list
+	#_FixedComponent__fixed: bool
+}
+odeon.model.device.Demand <|-- odeon.model.device.ChemicalDemand
+class odeon.model.device.Chiller {
+	+eer_nominal: float
+}
+odeon.model.device.Transformer <|-- odeon.model.device.Chiller
+odeon.model.component.ThermalComponent <|-- odeon.model.device.Chiller
+class odeon.model.device.Chp {
+	+nominal_electricity_ratio: float
+	+nominal_heat_ratio: float
+}
+odeon.model.device.Transformer <|-- odeon.model.device.Chp
+odeon.model.component.ThermalComponent <|-- odeon.model.device.Chp
+class odeon.model.device.ComponentGroup {
+	#_devices: list[Device]
+	#_DEVICE_TYPES: list[type]
+	..
+	+devices (property)
+	__
+	+get_device(self, device_type)
+}
+odeon.model.device.Device <|-- odeon.model.device.ComponentGroup
+odeon.model.device.ComponentGroup *-- odeon.model.device.Device
+class odeon.model.device.CompressionChiller {
+}
+odeon.model.device.Chiller <|-- odeon.model.device.CompressionChiller
+class odeon.model.device.CoolingDemand {
+}
+odeon.model.device.ThermalDemand <|-- odeon.model.device.CoolingDemand
+class odeon.model.device.Demand {
+}
+odeon.model.component.FixedComponent <|-- odeon.model.device.Demand
+class odeon.model.device.Device {
+}
+odeon.model.device._ComponentAsset <|-- odeon.model.device.Device
+class odeon.model.device.DhnConnectable {
+	#_pressure_output_flow: Temporal
+	#_pressure_input_flow: Temporal
+	#_mass_flow: Temporal
+	+dhn: 'DistrictHeatingNetwork'
+	..
+	+district_heating_network (property)
+	+mass_flow (property)
+	+pressure_input_flow (property)
+	+pressure_output_flow (property)
+	__
+}
+odeon.model.device.Transformer <|-- odeon.model.device.DhnConnectable
+odeon.model.component.ThermalComponent <|-- odeon.model.device.DhnConnectable
+class odeon.model.device.DhnLink {
+	+upper: 'DistrictHeatingNetwork'
+	+lower: 'DistrictHeatingNetwork'
+	+get_connecting_node_of_lower(self)
+	+get_connecting_node_of_upper(self)
+}
+odeon.model.device.Transformer <|-- odeon.model.device.DhnLink
+odeon.model.component.ThermalComponent <|-- odeon.model.device.DhnLink
+class odeon.model.device.DhwDemand {
+}
+odeon.model.device.HeatDemand <|-- odeon.model.device.DhwDemand
+class odeon.model.device.DhwStorage {
+}
+odeon.model.device.TankThermalEnergyStorage <|-- odeon.model.device.DhwStorage
+class odeon.model.device.ElectricTransformer {
+	#_transformer_load: Temporal
+	+sn_mva: float
+	+vn_hv_kv: float
+	+vn_lv_kv: float
+	+vk_percent: float
+	+vkr_percent: float
+	+pfe_kw: float
+	+i0_percent: float
+	+shift_degree: float
+	+vector_group: str
+	+tap_side: str
+	+tap_neutral: float
+	+tap_min: float
+	+tap_max: float
+	+tap_step_degree: float
+	+tap_step_percent: float
+	+tap_phase_shifter: bool
+	..
+	+transformer_load (property)
+	__
+}
+odeon.model.device.Transformer <|-- odeon.model.device.ElectricTransformer
+class odeon.model.device.ElectricityDemand {
+}
+odeon.model.device.Demand <|-- odeon.model.device.ElectricityDemand
+class odeon.model.device.ElectricityGrid {
+}
+odeon.model.device.Transformer <|-- odeon.model.device.ElectricityGrid
+class odeon.model.device.ElectricityGridConnection {
+}
+odeon.model.device.Transformer <|-- odeon.model.device.ElectricityGridConnection
+class odeon.model.device.ElectricityGridSink {
+}
+odeon.model.device.Transformer <|-- odeon.model.device.ElectricityGridSink
+class odeon.model.device.ElectricityGridSource {
+}
+odeon.model.device.Transformer <|-- odeon.model.device.ElectricityGridSource
+class odeon.model.device.ElectricitySource {
+}
+odeon.model.device.Transformer <|-- odeon.model.device.ElectricitySource
+class odeon.model.device.ElectricityStorage {
+}
+odeon.model.device.Storage <|-- odeon.model.device.ElectricityStorage
+class odeon.model.device.ElectrodeBooster {
+}
+odeon.model.device.Transformer <|-- odeon.model.device.ElectrodeBooster
+odeon.model.component.ThermalComponent <|-- odeon.model.device.ElectrodeBooster
+class odeon.model.device.ElectrodeHeater {
+	+efficiency_nominal: float
+}
+odeon.model.device.Transformer <|-- odeon.model.device.ElectrodeHeater
+odeon.model.component.ThermalComponent <|-- odeon.model.device.ElectrodeHeater
+class odeon.model.device.Electrolyzer {
+}
+odeon.model.device.Transformer <|-- odeon.model.device.Electrolyzer
+odeon.model.component.ThermalComponent <|-- odeon.model.device.Electrolyzer
+class odeon.model.device.FourPoleElectricityGridConnection {
+}
+odeon.model.device.Transformer <|-- odeon.model.device.FourPoleElectricityGridConnection
+class odeon.model.device.FreshWaterStation {
+}
+odeon.model.device.HeatExchanger <|-- odeon.model.device.FreshWaterStation
+class odeon.model.device.FuelCell {
+}
+odeon.model.device.Transformer <|-- odeon.model.device.FuelCell
+odeon.model.component.ThermalComponent <|-- odeon.model.device.FuelCell
+class odeon.model.device.FuelOilBoiler {
+}
+odeon.model.device.Boiler <|-- odeon.model.device.FuelOilBoiler
+class odeon.model.device.FuelOilSupply {
+}
+odeon.model.device.Transformer <|-- odeon.model.device.FuelOilSupply
+class odeon.model.device.GasDemand {
+}
+odeon.model.device.ChemicalDemand <|-- odeon.model.device.GasDemand
+class odeon.model.device.GasGrid {
+	+gas: Medium
+}
+odeon.model.asset.Asset <|-- odeon.model.device.GasGrid
+class odeon.model.device.GasGridConnection {
+	+grid: GasGrid
+}
+odeon.model.device.Transformer <|-- odeon.model.device.GasGridConnection
+class odeon.model.device.GeoStar {
+}
+odeon.model.device.BoreholeHeatExchanger <|-- odeon.model.device.GeoStar
+class odeon.model.device.GeothermalWell {
+	+has_turbine: bool
+	+efficiency_nominal: float
+}
+odeon.model.device.Transformer <|-- odeon.model.device.GeothermalWell
+odeon.model.component.ThermalComponent <|-- odeon.model.device.GeothermalWell
+class odeon.model.device.GroundHeatCollector {
+}
+odeon.model.device.Transformer <|-- odeon.model.device.GroundHeatCollector
+odeon.model.component.ThermalComponent <|-- odeon.model.device.GroundHeatCollector
+class odeon.model.device.GroundWaterConnection {
+	+efficiency_nominal: float
+}
+odeon.model.device.Transformer <|-- odeon.model.device.GroundWaterConnection
+odeon.model.component.ThermalComponent <|-- odeon.model.device.GroundWaterConnection
+class odeon.model.device.HeatDemand {
+}
+odeon.model.device.ThermalDemand <|-- odeon.model.device.HeatDemand
+class odeon.model.device.HeatExchanger {
+}
+odeon.model.device.Transformer <|-- odeon.model.device.HeatExchanger
+odeon.model.component.ThermalComponent <|-- odeon.model.device.HeatExchanger
+class odeon.model.device.HeatSource {
+}
+odeon.model.device.Transformer <|-- odeon.model.device.HeatSource
+odeon.model.component.ThermalComponent <|-- odeon.model.device.HeatSource
+class odeon.model.device.HeatingCurveParameterSet {
+	+heating_curve_slope: float
+	+heating_curve_offset: float
+	+radiators_exponent: float
+}
+class odeon.model.device.HeatingDemand {
+	+heating_distribution_type: HeatingDistributionType
+}
+odeon.model.device.HeatDemand <|-- odeon.model.device.HeatingDemand
+class odeon.model.device.HeatingDistribution {
+	+norm_heat_output: float
+	+norm_temperature_set: 'TemperatureSet'
+	+heating_curve: HeatingCurveParameterSet
+	+heating_distribution_type: HeatingDistributionType
+}
+odeon.model.device.Transformer <|-- odeon.model.device.HeatingDistribution
+odeon.model.component.ThermalComponent <|-- odeon.model.device.HeatingDistribution
+class odeon.model.device.HeatingStorage {
+}
+odeon.model.device.TankThermalEnergyStorage <|-- odeon.model.device.HeatingStorage
+class odeon.model.device.HeatingTransformationSystem {
+	+heating_system: Asset
+	+dhw_system: Asset
+}
+odeon.model.asset.Asset <|-- odeon.model.device.HeatingTransformationSystem
+class odeon.model.device.Heatpump {
+	#_cop: Temporal
+	+efficiency_carnot: float
+	+efficiency_lorenz: float
+	+n_stages: int
+	+spf: float
+	+heat_source: str
+	..
+	+cop (property)
+	__
+	+calc_carnot_cop(self)
+	+calc_cop(self)
+	+calc_lorenz_cop(self)
+	+calc_reduced_carnot_cop(self)
+	+calc_reduced_lorenz_cop(self)
+	+calc_scop(self)
+}
+odeon.model.device.Transformer <|-- odeon.model.device.Heatpump
+odeon.model.component.ThermalComponent <|-- odeon.model.device.Heatpump
+class odeon.model.device.HybridAirWaterHeatpump {
+}
+odeon.model.asset.CombiAsset <|-- odeon.model.device.HybridAirWaterHeatpump
+class odeon.model.device.HybridBrineWaterHeatpump {
+}
+odeon.model.asset.CombiAsset <|-- odeon.model.device.HybridBrineWaterHeatpump
+class odeon.model.device.HydrogenBoiler {
+}
+odeon.model.device.Boiler <|-- odeon.model.device.HydrogenBoiler
+class odeon.model.device.HydrogenStorage {
+}
+odeon.model.device.Storage <|-- odeon.model.device.HydrogenStorage
+class odeon.model.device.IceStorage {
+	+height: float
+	+radius: float
+}
+odeon.model.device.ThermalStorage <|-- odeon.model.device.IceStorage
+class odeon.model.device.LakeWaterHeatpump {
+}
+odeon.model.device.WaterWaterHeatpump <|-- odeon.model.device.LakeWaterHeatpump
+class odeon.model.device.LargeScaleHeatpump {
+	+calc_empirical_cop(self)
+}
+odeon.model.device.Heatpump <|-- odeon.model.device.LargeScaleHeatpump
+class odeon.model.device.MethaneBoiler {
+}
+odeon.model.device.Boiler <|-- odeon.model.device.MethaneBoiler
+class odeon.model.device.MethaneChp {
+}
+odeon.model.device.Chp <|-- odeon.model.device.MethaneChp
+class odeon.model.device.MineThermalEnergyStorage {
+}
+odeon.model.device.ThermalStorage <|-- odeon.model.device.MineThermalEnergyStorage
+class odeon.model.device.MineWaterReservoir {
+	+has_turbine: bool
+	+efficiency_nominal: float
+}
+odeon.model.device.Transformer <|-- odeon.model.device.MineWaterReservoir
+odeon.model.component.ThermalComponent <|-- odeon.model.device.MineWaterReservoir
+class odeon.model.device.PhotovoltaicDevice {
+	+temperature_nominal_stc: float
+	+temperature_coefficient_voltage: float
+	+number_inverters: int
+	+modules_per_string: int
+	+strings_per_inverter: int
+}
+odeon.model.device.SolarTransformer <|-- odeon.model.device.PhotovoltaicDevice
+class odeon.model.device.PitThermalEnergyStorage {
+	#_temperature_top: Temporal
+	#_temperature_bottom: Temporal
+	+lambda_top: float
+	+thickness_insulation_top: float
+	+lambda_side_bottom: float
+	+thickness_insulation_side_bottom: float
+	+temperature_soil: float
+	+area_top: float
+	+area_bottom: float
+	+area_sides: float
+	+height: float
+	..
+	+temperature_bottom (property)
+	+temperature_top (property)
+	__
+}
+odeon.model.device.WaterThermalEnergyStorage <|-- odeon.model.device.PitThermalEnergyStorage
+class odeon.model.device.PtesHeatpumpCombination {
+	..
+	+hp (property)
+	+ptes (property)
+	__
+}
+odeon.model.asset.CombiAsset <|-- odeon.model.device.PtesHeatpumpCombination
+class odeon.model.device.Pump {
+	+transfer_efficiency: float
+	+producer_massflow_max: float
+}
+odeon.model.asset.Asset <|-- odeon.model.device.Pump
+class odeon.model.device.SensibleThermalEnergyStorage {
+}
+odeon.model.device.ThermalStorage <|-- odeon.model.device.SensibleThermalEnergyStorage
+class odeon.model.device.ShallowGeoStar {
+}
+odeon.model.device.GeoStar <|-- odeon.model.device.ShallowGeoStar
+class odeon.model.device.SolarMountingConfiguration {
+	+tilt_modules: float
+	+azimuth_modules: float
+	+azimuth_modules_east: float
+	+azimuth_modules_west: float
+	+distance_between_modules: float
+	..
+	+is_east_west (property)
+	__
+}
+odeon.model.base.Object <|-- odeon.model.device.SolarMountingConfiguration
+class odeon.model.device.SolarSurface {
+	+tilt: float
+	+azimuth: float
+	+usable_length: float
+	+usable_width: float
+	+usable_area: float
+	+factor_existing_pv: float
+	+factor_occupied_nonsolar: float
+	+possible_number_modules: float
+	..
+	+devices (property)
+	__
+	#_get_energy_system_host(self)
+	+add_solar_transformers(self, solar_transformers)
+	+remove_solar_transformers(self, solar_transformers)
+}
+odeon.model.base.Object <|-- odeon.model.device.SolarSurface
+class odeon.model.device.SolarSurfaceHost {
+	#_solar_surface: SolarSurface
+	..
+	+solar_surface (property)
+	__
+}
+odeon.model.base.Object <|-- odeon.model.device.SolarSurfaceHost
+class odeon.model.device.SolarThermalDevice {
+	+power_nominal_per_module_area: float
+	..
+	+module_area (property)
+	__
+}
+odeon.model.device.SolarTransformer <|-- odeon.model.device.SolarThermalDevice
+odeon.model.component.ThermalComponent <|-- odeon.model.device.SolarThermalDevice
+class odeon.model.device.SolarTransformer {
+	#_total_irradiance_j_per_sqm: Temporal
+	#_solar_mounting_configuration: SolarMountingConfiguration
+	#_solar_surface: SolarSurface
+	+module_area: float
+	+number_modules: int
+	+efficiency_nominal: float
+	..
+	+is_mounted (property)
+	+power_nominal_per_area (property)
+	+solar_mounting_configuration (property)
+	+solar_surface (property)
+	+total_irradiance_j_per_sqm (property)
+	__
+}
+odeon.model.device.Transformer <|-- odeon.model.device.SolarTransformer
+class odeon.model.device.Storage {
+	#_content: Temporal
+	+capacity_min: float
+	#_power_input_relative: float
+	#_power_output_relative: float
+	#_power_input_nominal: float
+	#_power_output_nominal: float
+	+loss_rate: float
+	+unload_time: float
+	..
+	+capacity (property)
+	+content (property)
+	+power (property)
+	+power_input_nominal (property)
+	+power_input_relative (property)
+	+power_nominal (property)
+	+power_output_nominal (property)
+	+power_output_relative (property)
+	+soc (property)
+	__
+}
+odeon.model.device.Device <|-- odeon.model.device.Storage
+class odeon.model.device.TankThermalEnergyStorage {
+}
+odeon.model.device.WaterThermalEnergyStorage <|-- odeon.model.device.TankThermalEnergyStorage
+class odeon.model.device.TemperatureSet {
+	+supply_temp: float
+	+return_temp: float
+	+room_temp: float
+}
+class odeon.model.device.ThermalBus {
+}
+odeon.model.device.Bus <|-- odeon.model.device.ThermalBus
+odeon.model.component.ThermalComponent <|-- odeon.model.device.ThermalBus
+class odeon.model.device.ThermalDemand {
+}
+odeon.model.device.Demand <|-- odeon.model.device.ThermalDemand
+odeon.model.component.ThermalComponent <|-- odeon.model.device.ThermalDemand
+class odeon.model.device.ThermalStorage {
+	+volume: float
+	+ratio_area_volume: float
+	+usable_temperature_delta: float
+}
+odeon.model.device.Storage <|-- odeon.model.device.ThermalStorage
+odeon.model.component.ThermalComponent <|-- odeon.model.device.ThermalStorage
+class odeon.model.device.TransferStation {
+	#_pressure_setpoint_output_flow: Temporal
+	#_output_forward_setpoint_temperature: Temporal
+	#_volume_flow: Temporal
+	+transfer_efficiency: float
+	+producer_massflow_max: float
+	..
+	+output_forward_setpoint_temperature (property)
+	+pressure_setpoint_output_flow (property)
+	+volume_flow (property)
+	__
+}
+odeon.model.device.DhnConnectable <|-- odeon.model.device.TransferStation
+class odeon.model.device.Transformer {
+	#_relative_power_max: dict[Socket, Temporal]
+	+specific_co2_emissions: float
+	+specific_primary_energy_consumption: float
+	+flh_min: float
+	+flh_max: float
+	..
+	+power_nominal (property)
+	+usage_count (property)
+	+usage_time (property)
+	__
+	+calc_co2_emissions(self)
+	+calc_flh(self)
+	+calc_primary_energy_consumption(self)
+	+get_power_max(self, at)
+	+get_relative_power_max(self, at)
+	+set_relative_power_max(self, power_max, at)
+}
+odeon.model.device.Device <|-- odeon.model.device.Transformer
+class odeon.model.device.TransformerStation {
+	#_mv_node: om.DegNode
+	..
+	+mv_node (property)
+	__
+}
+odeon.model.device.Transformer <|-- odeon.model.device.TransformerStation
+class odeon.model.device.WallBox {
+}
+odeon.model.device.ElectricityDemand <|-- odeon.model.device.WallBox
+class odeon.model.device.WasteWaterTreatment {
+	+has_turbine: bool
+	+efficiency_nominal: float
+}
+odeon.model.device.Transformer <|-- odeon.model.device.WasteWaterTreatment
+odeon.model.component.ThermalComponent <|-- odeon.model.device.WasteWaterTreatment
+class odeon.model.device.WaterThermalEnergyStorage {
+}
+odeon.model.device.SensibleThermalEnergyStorage <|-- odeon.model.device.WaterThermalEnergyStorage
+class odeon.model.device.WaterWaterHeatpump {
+}
+odeon.model.device.Heatpump <|-- odeon.model.device.WaterWaterHeatpump
+class odeon.model.device.WindpowerDevice {
+	+turbine_type: str
+	+number_turbines: int
+	+total_capacity: float
+}
+odeon.model.device.Transformer <|-- odeon.model.device.WindpowerDevice
+class odeon.model.device._ComponentAsset {
+}
+odeon.model.asset.Asset <|-- odeon.model.device._ComponentAsset
+odeon.model.component.FixedComponent <|-- odeon.model.device._ComponentAsset
+@enduml

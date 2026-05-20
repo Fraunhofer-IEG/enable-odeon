@@ -1,0 +1,98 @@
+@startuml
+' odeon.model.temporal
+
+class odeon.model.temporal.Temporal {
+	#_STORE_SHAPE: bool
+	#_STORE_SERIES: bool
+	#_READ_ONLY: bool
+	#_SWAP_MODE: Literal
+	#_swapped: bool
+	#_n_accesses: int
+	#_series_none: bool
+	-__series: pandas.core.series.Series | None
+	-__shape: pandas.core.series.Series | None
+	#_total: numbers.Number | None
+	#_fix: numbers.Number | None
+	#_timeindex: pandas.core.indexes.datetimes.DatetimeIndex | None
+	#_parent: odeon.model.base.Object | None
+	#_master: odeon.model.temporal.Temporal | None
+	#_clients: list
+	#_min: numbers.Number | None
+	#_max: numbers.Number | None
+	#_mean: numbers.Number | None
+	#_constraints: dict
+	..
+	+branch (property)
+	+clients (property)
+	+clients_recursive (property)
+	+fix (property)
+	+has_branch (property)
+	+has_clients (property)
+	+has_fix (property)
+	+has_master (property)
+	+has_parent (property)
+	+has_series (property)
+	+has_shape (property)
+	+has_timeindex (property)
+	+has_timeseries (property)
+	+has_timeshape (property)
+	+has_total (property)
+	+is_constant (property)
+	+is_empty (property)
+	+is_temporal (property)
+	+length (property)
+	+master (property)
+	+masters_recursive (property)
+	+n_accesses (property)
+	+parent (property)
+	+rangeindex (property)
+	+read_only (property)
+	+series (property)
+	+shape (property)
+	+swap_mode (property)
+	+timeindex (property)
+	+timeseries (property)
+	+timeshape (property)
+	+timevalue (property)
+	+total (property)
+	+value (property)
+	__
+	#__add(self, other, factor)
+	#_add_to_master(self, master)
+	#_get(self, attribute, not_available)
+	#_get_series(self)
+	#_get_shape(self)
+	#_is_available(self, attribute)
+	#_is_constrained_by(self, constraint)
+	#_load(self)
+	#_remove_client(self, timeseries)
+	#_remove_series_from_hdf(self)
+	#_reset_access_counter(self)
+	#_series_from_compressed_blob(blob, dtype, length, compressed)
+	#_series_from_hdf(self)
+	#_series_to_compressed_blob(self, series)
+	#_series_to_hdf(self, series)
+	#_series_to_timeseries(self, series)
+	#_set(self, attribute, value)
+	#_set_constraints(self, total, shape, series, fix, timeindex, master, parent)
+	#_set_parent(self, parent)
+	#_set_series(self, series)
+	#_set_shape(self, shape)
+	#_swap(self)
+	+add_client(self, client)
+	+add_to_master(self, master)
+	+copy(self)
+	+create_client(self, total, factor)
+	+equals(self, other)
+	+max(self)
+	+mean(self)
+	+min(self)
+	+remove_client(self, client)
+	+remove_from_master(self)
+	+set_shape_or_series(self, shape)
+	+set_swap_mode_from_branch(self)
+	+set_timeshape_or_timeseries(self, timeshape)
+	+to_compressed_record(self)
+}
+odeon.model.base.Identified <|-- odeon.model.temporal.Temporal
+@enduml

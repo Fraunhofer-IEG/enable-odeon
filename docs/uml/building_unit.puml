@@ -1,0 +1,113 @@
+@startuml
+' odeon.model.building_unit
+
+enum odeon.model.building_unit.CommercialType {
+	{field}{static}CONSTRUCTION: construction
+	{field}{static}OFFICE: office
+	{field}{static}BANK: bank
+	{field}{static}PUBLISHER: publisher
+	{field}{static}OTHERSERVICES: other_services
+	{field}{static}LOCALAUTHORITIES: local_authorities
+	{field}{static}POSTAL: postal
+	{field}{static}TELECOMMUNICATION: telecommunication
+	{field}{static}RAILWAY: railway
+	{field}{static}INDUSTRYMETAL: metal_industry
+	{field}{static}INDUSTRYMOTOR: motor_industry
+	{field}{static}INDUSTRYWOOD: wood_industry
+	{field}{static}INDUSTRYPAPER: paper_and_printing_industry
+	{field}{static}TRADERETAILFOOD: retail_trade_food
+	{field}{static}TRADERETAILNONFOOD: retail_trade_nonfood
+	{field}{static}TRADEWHOLESALEFOOD: wholesale_food
+	{field}{static}TRADEWHOLESALENONFOOD: wholesale_nonfood
+	{field}{static}TRADEAGENCIES: trade_agency
+	{field}{static}HOSPITAL: hospital
+	{field}{static}SCHOOL: school
+	{field}{static}BATH: public_bath
+	{field}{static}LODGINGINDUSTRY: lodging_industry
+	{field}{static}CATERINGINDUSTRY: restaurant
+	{field}{static}SHELTER: non-profit_organization_and_shelter
+	{field}{static}BAKERY: bakery
+	{field}{static}BUTCHER: butcher_shop
+	{field}{static}INDUSTRYFOOD: rest_of_food_industry
+	{field}{static}LAUNDRY: laundries_and_(dry)_cleaners
+	{field}{static}AGRICULTURE: agriculture
+	{field}{static}HORTICULTURE: horticulture_and_gardening
+	{field}{static}AIRPORT: airport
+	{field}{static}TEXTILE: clothing_leather_textile
+	{field}{static}SHIPPING: shipping_storage_transportation
+	{field}{static}MARKETSTALLS: market_stall_etc.
+	{field}{static}METALPLASTICRUBBER: non-ferrous_metal_plastic_rubber
+	{field}{static}COLDSTORE: cold_store
+	{field}{static}WATERSEWAGE: water_supply_and_sewage_disposal
+	{field}{static}DATACENTER: data_center
+	{field}{static}NONGHD: not_considered_of_the_GHD_sector
+	{field}{static}INDUSTRY: industry
+	{field}{static}STREETLIGHTING: street_lighting
+	{field}{static}MFHFACILITIES: community_facility_mfh
+	{field}{static}MILITARY: military
+	{field}{static}OTHER: other
+	{field}{static}INSURANCE: insurance
+	{field}{static}GROCERIES: groceries
+}
+enum odeon.model.building_unit.ResidentAgeGroup {
+	{field}{static}BELOW_18: 18_or_below
+	{field}{static}BETWEEN_18_AND_65: above_18_and_65_or_below
+	{field}{static}ABOVE_65: above_65
+}
+enum odeon.model.building_unit.SourceOfIncome {
+	{field}{static}OCCUPIED: occupied
+	{field}{static}PUBLIC_SUPPORT: public_support
+	{field}{static}RETIRED: retired
+	{field}{static}FAMILY_SUPPORT: family_support
+	{field}{static}OWN_WEALTH: own_wealth
+}
+class odeon.model.building_unit.BuildingUnit {
+	#_building_physics: BuildingThermalZone
+	+base_area: float
+	#_net_floor_area: float
+	+holidays: list
+	+vacations: list
+	..
+	+building_physics (property)
+	+delivery_contract (property)
+	+feed_in_contract (property)
+	+net_floor_area (property)
+	__
+}
+odeon.model.energy_system.EnergySystemHost <|-- odeon.model.building_unit.BuildingUnit
+odeon.model.building_unit.BuildingUnit *-- odeon.model.building_physics.BuildingThermalZone
+class odeon.model.building_unit.Commercial {
+	#_scaling_reference: ScalingReference
+	#_commercial_type: CommercialType
+	..
+	+commercial_type (property)
+	+scaling_reference (property)
+	__
+}
+odeon.model.building_unit.BuildingUnit <|-- odeon.model.building_unit.Commercial
+odeon.model.building_unit.Commercial *-- odeon.model.building_unit.ScalingReference
+odeon.model.building_unit.Commercial *-- odeon.model.building_unit.CommercialType
+class odeon.model.building_unit.Household {
+	#_residents: Resident
+	#_size: int
+	..
+	+residents (property)
+	+size (property)
+	__
+	+add_residents(self, residents)
+	+remove_residents(self)
+}
+odeon.model.building_unit.BuildingUnit <|-- odeon.model.building_unit.Household
+odeon.model.building_unit.Household *-- odeon.model.building_unit.Resident
+class odeon.model.building_unit.Resident {
+	+age: ResidentAgeGroup
+	+source_of_income: SourceOfIncome
+}
+odeon.model.base.Object <|-- odeon.model.building_unit.Resident
+odeon.model.building_unit.Resident *-- odeon.model.building_unit.ResidentAgeGroup
+odeon.model.building_unit.Resident *-- odeon.model.building_unit.SourceOfIncome
+class odeon.model.building_unit.ScalingReference {
+	+amount: float
+}
+odeon.model.base.Object <|-- odeon.model.building_unit.ScalingReference
+@enduml

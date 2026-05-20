@@ -1,0 +1,34 @@
+@startuml
+' odeon.model.waters
+
+class odeon.model.waters.Lake {
+	+geometry: Geometry
+	+volume: float
+	+max_depth: float
+	+specific_heat_capacity_kj_per_kg_k: float
+	+density: float
+	..
+	+energy_potential_kj (property)
+	__
+}
+odeon.model.waters.Waters <|-- odeon.model.waters.Lake
+odeon.model.waters.Lake *-- odeon.model.geometry.Geometry
+class odeon.model.waters.River {
+	+geometry: Geometry
+	+volume: float
+	+max_depth: float
+	+specific_heat_capacity_kj_per_kg_k: float
+	+density: float
+}
+odeon.model.waters.Waters <|-- odeon.model.waters.River
+odeon.model.waters.River *-- odeon.model.geometry.Geometry
+class odeon.model.waters.Waters {
+	+geometry: Geometry
+	+volume: float
+	+max_depth: float
+	+specific_heat_capacity_kj_per_kg_k: float
+	+density: float
+}
+odeon.model.base.Object <|-- odeon.model.waters.Waters
+odeon.model.waters.Waters *-- odeon.model.geometry.Geometry
+@enduml

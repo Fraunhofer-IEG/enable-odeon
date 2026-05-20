@@ -1,0 +1,28 @@
+@startuml
+' odeon.model.energy_network
+
+class odeon.model.energy_network.EnergyEdge {
+}
+odeon.model.energy_network.EnergyNetworkObject <|-- odeon.model.energy_network.EnergyEdge
+odeon.model.network.Edge <|-- odeon.model.energy_network.EnergyEdge
+class odeon.model.energy_network.EnergyNetwork {
+	+apply_connections_from_attachments(self, input_component_types, output_component_types, if_extra_components, write_lossless_input_flow)
+	+check_consistencey_of_connected_energy_system_hosts(self)
+	+check_consistency_of_connected_components(self)
+	+get_connected_energy_system_hosts(self, type)
+	+get_connected_energy_system_hosts_via_attachments(self)
+	+get_connected_energy_system_hosts_via_links(self)
+	+get_connected_energy_systems_via_attachments(self)
+	+get_connected_energy_systems_via_links(self)
+}
+odeon.model.network.Network <|-- odeon.model.energy_network.EnergyNetwork
+odeon.model.device.Bus <|-- odeon.model.energy_network.EnergyNetwork
+class odeon.model.energy_network.EnergyNetworkObject {
+}
+odeon.model.network.NetworkObject <|-- odeon.model.energy_network.EnergyNetworkObject
+odeon.model.asset.Asset <|-- odeon.model.energy_network.EnergyNetworkObject
+class odeon.model.energy_network.EnergyNode {
+}
+odeon.model.energy_network.EnergyNetworkObject <|-- odeon.model.energy_network.EnergyNode
+odeon.model.network.Node <|-- odeon.model.energy_network.EnergyNode
+@enduml

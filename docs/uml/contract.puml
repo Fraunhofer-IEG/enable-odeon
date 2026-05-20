@@ -1,0 +1,25 @@
+@startuml
+' odeon.model.contract
+
+class odeon.model.contract.Contract {
+	+energy_price: Series
+	+limit_power: float
+	+delivered_energy: Series
+	+energy_cost: Series
+	+contract_type: str
+}
+odeon.model.base.Object <|-- odeon.model.contract.Contract
+class odeon.model.contract.DeliveryContract {
+	+shutoff_time_hp: dict
+	+shutoff_time_charging_pole: dict
+}
+odeon.model.contract.Contract <|-- odeon.model.contract.DeliveryContract
+class odeon.model.contract.FeedInContract {
+	+energy_price: Series
+	+limit_power: float
+	+delivered_energy: Series
+	+energy_cost: Series
+	+contract_type: str
+}
+odeon.model.contract.Contract <|-- odeon.model.contract.FeedInContract
+@enduml

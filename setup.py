@@ -1,0 +1,37 @@
+import setuptools
+
+setuptools.setup(
+    name="odeon",
+    version="0.102.0",
+    author="Fraunhofer IEG",
+    package_dir={"src": "odeon"},
+    packages=setuptools.find_packages(),
+    package_data={
+        "odeon": ["config/*.yml"],
+    },
+    python_requires=">=3.10",
+    install_requires=[
+        "pathlib",
+        "pyproj",
+        "pandas",
+        "shapely",
+        "geopandas",
+        "GitPython",
+        "scipy",
+        "matplotlib",
+        "networkx",
+        "plotly>=5.13",
+        "pyyaml",
+        "contextily",
+        "holidays",
+        "Rtree",
+        "pympler",
+        "h5py",
+        "fiona",
+        "tqdm",
+        "nbformat",
+        "nbclient",
+    ],
+    extras_require={"pyvista_plotting": ["pyvista"]},
+    include_package_data=True,
+)

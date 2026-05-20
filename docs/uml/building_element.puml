@@ -1,0 +1,50 @@
+@startuml
+' odeon.model.building_element
+
+class odeon.model.building_element.BuildingElement {
+	#_element_physics: ElementPhysics
+	#_element_geometry: Geometry
+	+adjacent_environment: AdjacentEnvironment
+	..
+	+element_geometry (property)
+	+element_physics (property)
+	__
+}
+odeon.model.base.Object <|-- odeon.model.building_element.BuildingElement
+class odeon.model.building_element.Door {
+	#_element_physics: ElementPhysics
+	#_element_geometry: Geometry
+	+adjacent_environment: AdjacentEnvironment
+}
+odeon.model.building_element.BuildingElement <|-- odeon.model.building_element.Door
+class odeon.model.building_element.Floor {
+	#_element_physics: ElementPhysics
+	#_element_geometry: Geometry
+	+adjacent_environment: AdjacentEnvironment
+}
+odeon.model.building_element.BuildingElement <|-- odeon.model.building_element.Floor
+class odeon.model.building_element.Roof {
+	#_solar_surface: SolarSurface
+}
+odeon.model.device.SolarSurfaceHost <|-- odeon.model.building_element.Roof
+odeon.model.building_element.SubelementHost <|-- odeon.model.building_element.Roof
+class odeon.model.building_element.SubelementHost {
+	#_sub_elements: list
+	..
+	+sub_elements (property)
+	__
+	+add_sub_elements(self, sub_elements)
+}
+odeon.model.building_element.BuildingElement <|-- odeon.model.building_element.SubelementHost
+class odeon.model.building_element.Wall {
+	#_solar_surface: SolarSurface
+}
+odeon.model.device.SolarSurfaceHost <|-- odeon.model.building_element.Wall
+odeon.model.building_element.SubelementHost <|-- odeon.model.building_element.Wall
+class odeon.model.building_element.Window {
+	#_element_physics: ElementPhysics
+	#_element_geometry: Geometry
+	+adjacent_environment: AdjacentEnvironment
+}
+odeon.model.building_element.BuildingElement <|-- odeon.model.building_element.Window
+@enduml

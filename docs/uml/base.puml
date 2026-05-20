@@ -1,0 +1,194 @@
+@startuml
+' odeon.model.base
+
+enum odeon.model.base.StrEnum {
+	has_member_key(cls, key)
+}
+enum odeon.model.base.UniqueEnum {
+	from_json(cls, data)
+}
+class odeon.model.base.Base {
+	-__frozen: bool
+	#_affiliations: list
+	+name: str
+	+labels: dict
+	+custom_data: dict
+	..
+	+affiliations (property)
+	+affiliations_recursive (property)
+	+branch (property)
+	+project (property)
+	__
+	+add_affiliations(self, affiliations)
+	+get_attribute(self, key)
+	+set_attribute(self, key, value)
+}
+odeon.model.base.Identified <|-- odeon.model.base.Base
+class odeon.model.base.Branch {
+	-__timeindex: pd.DatetimeIndex
+	-__project: Project
+	-__objects: set[Object]
+	-__reference_branch: Branch | None
+	-__mapping: dict[Object, Object]
+	-__organizers: list[Organizer]
+	-__weather: Weather
+	-__financing: Financing
+	+holidays: list[datetime]
+	+description: dict
+	+history: CallTracker
+	..
+	+financing (property)
+	+mapping (property)
+	+objects (property)
+	+organizers (property)
+	+reference_branch (property)
+	+references (property)
+	+timeindex (property)
+	+validity (property)
+	+weather (property)
+	+year (property)
+	__
+	#_deepcopy_objects(self)
+	#_remove_objects(self, objects, error_if_not_found, reverse)
+	#_set_project(self, project)
+	+add_objects(self, objects)
+	+add_organizers(self, organizers)
+	+get_object_by_chained_reference(self, reference)
+	+get_object_by_reference(self, reference)
+	+get_organizers_of_type(self, types)
+	+remove_objects(self, objects)
+	+remove_organizers(self, organizers)
+}
+odeon.model.base.Parent <|-- odeon.model.base.Branch
+odeon.model.base.ProjectOrBranch <|-- odeon.model.base.Branch
+odeon.model.base.Base <|-- odeon.model.base.Branch
+odeon.model.base.Branch *-- odeon.model.base.Project
+odeon.model.base.Branch *-- odeon.model.base.Object
+odeon.model.base.Branch *-- odeon.model.base.Branch
+odeon.model.base.Branch *-- odeon.model.base.Organizer
+odeon.model.base.Branch *-- odeon.model.environment.Weather
+odeon.model.base.Branch *-- odeon.model.expense.Financing
+odeon.model.base.Branch *-- odeon.metadata.CallTracker
+class odeon.model.base.GeometryObject {
+	+geometry: 'Geometry'
+}
+odeon.model.base.Object <|-- odeon.model.base.GeometryObject
+class odeon.model.base.IdAuthority {
+	..
+	+last_value (property)
+	__
+	+last_value_from_objects(self)
+	+set_last_value(self, last_value)
+}
+class odeon.model.base.Identified {
+	-__id: int
+	..
+	+id (property)
+	__
+	#_set_new_id_from_authority(self)
+}
+class odeon.model.base.Object {
+	-__parent: Parent | None
+	#_children_attributes: dict
+	#_associated_attributes: list
+	#_temporal_attributes: list
+	#_temporal_dict_attributes: list
+	..
+	+ancestors (property)
+	+associated (property)
+	+parent (property)
+	+reference (property)
+	+root (property)
+	+temporals (property)
+	+timeindex (property)
+	+year (property)
+	__
+	#_collect_ids(self, down, up, sideways, seen_ids)
+	#_remove_children(self, objects, error_if_not_found, reverse)
+	#_set_dict_temporal(self, attr, key, temporal)
+	#_set_parent(self, parent, error_if_not_found)
+	#_set_simple_temporal(self, attr, temporal)
+	+deepcopy(self, down, up, sideways)
+	+get_ancestors_of_type(self, type)
+	+get_closest_ancestor_geometry(self, stop_at_none)
+	+get_closest_ancestor_of_type(self, type, not_found)
+	+get_dict_temporal(self, attr, key, add_empty_if_missing)
+	+reference_chain(self)
+	+remove_from_parent(self)
+	+remove_temporal(self, attr, key, temporal)
+	+set_temporal(self, attr, x, key, error_if_values_below, error_if_values_above)
+}
+odeon.model.base.Base <|-- odeon.model.base.Object
+odeon.model.base.Parent <|-- odeon.model.base.Object
+odeon.model.base.Object *-- odeon.model.base.Parent
+class odeon.model.base.Organizer {
+	#_member_attributes: list
+	..
+	+dependents (property)
+	+members (property)
+	+members_all (property)
+	__
+	+get_dependents_of_type(self, type_)
+}
+odeon.model.base.Object <|-- odeon.model.base.Organizer
+class odeon.model.base.Parent {
+	..
+	+children (property)
+	+offspring (property)
+	__
+	#_children_as_set(self)
+	#_get_offspring_by_id(self, id)
+	#_get_offspring_by_name(self, name)
+	#_get_offspring_by_type(self, types)
+	#_offspring_as_set(self)
+	#_to_digraph_tuples(self, lst)
+	+add_children(self, child)
+	+classes_and_ids(self)
+	+find_object(self, type, name, id, not_found, roots)
+	+find_objects(self, type, name, id, roots)
+	+find_objects_by_ref_geometry(self, type, geometry, from_srid, order, overlap_ratio)
+	+find_objects_filtered(self, type, name, only_reachable_through, omit_reachable_through)
+	+ids_and_objects(self)
+	+remove_children(self, child)
+	+temporals_recursive(self)
+	+to_digraph(self, with_data)
+}
+class odeon.model.base.Project {
+	+id_authority: IdAuthority | None
+	-__name: str | None
+	-__projector: Projector
+	-__branches: list[Branch]
+	-__boundary_wgs84: Polygon
+	-__boundary_local: Polygon
+	-__main_branch: Branch | None
+	#_file_adapter: FileAdapter | None
+	..
+	+boundary_local (property)
+	+boundary_wgs84 (property)
+	+branches (property)
+	+file_adapter (property)
+	+main_branch (property)
+	+name (property)
+	+projector (property)
+	+root (property)
+	__
+	+add_branches(self, branches)
+	+bifurcate_from_branch(self, source_branch, name, year, description)
+	+bifurcate_from_main(self, name, year, description)
+	+find_branch(self, name, id, years, description, description_match_mode, not_found)
+	+find_branches(self, name, id, years, description, description_match_mode)
+	+find_object(self, type, name, id, not_found)
+	+find_objects(self, type, name, id)
+	+get_object_slice(self, object)
+	+remove_branches(self, branches)
+	+renew_ids(self)
+	+reorder_branches(self, branches_in_new_order)
+}
+odeon.model.base.ProjectOrBranch <|-- odeon.model.base.Project
+class odeon.model.base.ProjectOrBranch {
+	#_temporal_manager: 'TemporalManager'
+	..
+	+temporal_manager (property)
+	__
+}
+@enduml

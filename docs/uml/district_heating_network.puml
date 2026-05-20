@@ -1,0 +1,137 @@
+@startuml
+' odeon.model.district_heating_network
+
+enum odeon.model.district_heating_network.DhnFluid {
+	{field}{static}WATER: Water
+	{field}{static}BRINE_E_GLYCOL_25: INCOMP::MEG-25%
+}
+class odeon.model.district_heating_network.DhnEdge {
+	#_pipe_supply: 'DhnPipe'
+	#_pipe_return: 'DhnPipe'
+	#_net_exergy_flow: Temporal
+	+type: str
+	+distance_between_pipe_edges: float
+	+distance_between_pipe_centers: float
+	#_node_to: DhnNode
+	#_node_from: DhnNode
+	#_diameter: float
+	#_material: str
+	#_diameter_nominal_mm: float
+	#_u_value_w_per_sqm_k: float
+	..
+	+diameter (property)
+	+diameter_nominal_mm (property)
+	+heat_flow (property)
+	+material (property)
+	+net_exergy_flow (property)
+	+pipe_return (property)
+	+pipe_supply (property)
+	+pipes (property)
+	+u_value_w_per_sqm_k (property)
+	__
+	+remove_pipe_return(self)
+	+remove_pipe_supply(self)
+	+set_pipe_return(self, pipe)
+	+set_pipe_supply(self, pipe)
+}
+odeon.model.energy_network.EnergyEdge <|-- odeon.model.district_heating_network.DhnEdge
+odeon.model.district_heating_network.DhnObject <|-- odeon.model.district_heating_network.DhnEdge
+class odeon.model.district_heating_network.DhnJunction {
+	#_temperature: Temporal
+	#_pressure: Temporal
+	..
+	+attachment (property)
+	+node (property)
+	+pressure (property)
+	+temperature (property)
+	__
+}
+odeon.model.district_heating_network.DhnObject <|-- odeon.model.district_heating_network.DhnJunction
+class odeon.model.district_heating_network.DhnNode {
+	#_junction_supply: 'DhnJunction'
+	#_junction_return: 'DhnJunction'
+	..
+	+junction_return (property)
+	+junction_supply (property)
+	+junctions (property)
+	__
+	+remove_junction_return(self)
+	+remove_junction_supply(self)
+	+remove_junctions(self)
+	+set_junction_return(self, junction)
+	+set_junction_supply(self, junction)
+}
+odeon.model.energy_network.EnergyNode <|-- odeon.model.district_heating_network.DhnNode
+odeon.model.district_heating_network.DhnObject <|-- odeon.model.district_heating_network.DhnNode
+class odeon.model.district_heating_network.DhnObject {
+}
+odeon.model.energy_network.EnergyNetworkObject <|-- odeon.model.district_heating_network.DhnObject
+class odeon.model.district_heating_network.DhnPipe {
+	#_junction_from: DhnJunction
+	#_junction_to: DhnJunction
+	#_mass_flow_kg_per_s: Temporal
+	#_mean_fluid_velocity: Temporal
+	#_temperature_in: Temporal
+	#_temperature_out: Temporal
+	#_temperature_external: Temporal
+	#_pressure_in: Temporal
+	#_pressure_out: Temporal
+	#_reynolds: Temporal
+	#_friction_coef_lambda: Temporal
+	+type: str
+	+material: str
+	+diameter: float
+	+diameter_nominal_mm: float
+	+u_value_w_per_sqm_k: float
+	+friction: float
+	+roughness: float
+	..
+	+edge (property)
+	+fluid (property)
+	+friction_coef_lambda (property)
+	+heat_loss (property)
+	+junction_from (property)
+	+junction_to (property)
+	+length (property)
+	+mass_flow_kg_per_s (property)
+	+max_heat_loss (property)
+	+max_mean_fluid_velocity (property)
+	+max_pressure_loss (property)
+	+max_temperature_loss (property)
+	+mean_fluid_velocity (property)
+	+pressure_in (property)
+	+pressure_loss (property)
+	+pressure_loss_per_length (property)
+	+pressure_out (property)
+	+reynolds (property)
+	+temperature_external (property)
+	+temperature_in (property)
+	+temperature_loss (property)
+	+temperature_out (property)
+	__
+	+remove_junction_from(self)
+	+remove_junction_to(self)
+	+set_junction_from(self, junction)
+	+set_junction_to(self, junction)
+}
+odeon.model.district_heating_network.DhnObject <|-- odeon.model.district_heating_network.DhnPipe
+class odeon.model.district_heating_network.DistrictHeatingNetwork {
+	+fluid: DhnFluid
+	..
+	+building_dhn_connections (property)
+	+fully_piped (property)
+	+junctions (property)
+	+junctions_return (property)
+	+junctions_supply (property)
+	+partly_piped (property)
+	+pipes (property)
+	+pipes_return (property)
+	+pipes_supply (property)
+	+transformers (property)
+	__
+	+get_pipe_between_junctions(self, junction_from, junction_to)
+	+get_pipes_by_junctions(self, junctions, direction, level)
+	+is_applied(self, check_producers, check_consumers, check_dhn_component_links)
+}
+odeon.model.energy_network.EnergyNetwork <|-- odeon.model.district_heating_network.DistrictHeatingNetwork
+@enduml

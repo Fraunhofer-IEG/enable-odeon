@@ -1,0 +1,56 @@
+@startuml
+' odeon.model.district_electricity_grid
+
+class odeon.model.district_electricity_grid.DegCable {
+	#_lineload_percent: <class 'odeon.model.temporal.Temporal'>
+	+parallel: <class 'int'>
+	+type_: <class 'str'>
+	+max_current: <class 'float'>
+	+r_ohm_per_km: <class 'float'>
+	+x_ohm_per_km: <class 'float'>
+	+c_nf_per_km: <class 'float'>
+	+max_i_ka: <class 'float'>
+	..
+	+lineload_percent (property)
+	__
+}
+odeon.model.energy_network.EnergyEdge <|-- odeon.model.district_electricity_grid.DegCable
+odeon.model.district_electricity_grid.DegObject <|-- odeon.model.district_electricity_grid.DegCable
+odeon.model.district_electricity_grid.DegCable *-- odeon.model.temporal.Temporal
+class odeon.model.district_electricity_grid.DegNode {
+	#_voltage: <class 'odeon.model.temporal.Temporal'>
+	..
+	+demand (property)
+	+gen (property)
+	+storage (property)
+	+voltage (property)
+	__
+	+connected_devices_of_type(self, type_)
+	+get_el_bus_from_attachment(self)
+	+get_flows_by_attached_component(self, type_)
+	+get_trafos_in_node(self)
+}
+odeon.model.energy_network.EnergyNode <|-- odeon.model.district_electricity_grid.DegNode
+odeon.model.district_electricity_grid.DegObject <|-- odeon.model.district_electricity_grid.DegNode
+odeon.model.district_electricity_grid.DegNode *-- odeon.model.temporal.Temporal
+class odeon.model.district_electricity_grid.DegObject {
+}
+odeon.model.energy_network.EnergyNetworkObject <|-- odeon.model.district_electricity_grid.DegObject
+class odeon.model.district_electricity_grid.DistrictElectricityGrid {
+	..
+	+cables (property)
+	__
+	+add_cables(self, cables)
+	+create_component_df(self)
+	+get_all_trafos_in_deg(self)
+	+get_lgs_nodes(self)
+	+get_nodes_by_connection_types(self, attachment_types)
+	+get_objects_of_type_by_voltage_lvl(self, voltage_lvl, object_type)
+	+get_source_nodes(self)
+	+get_transformer_nodes(self)
+	+remove_cables(self, cables, node_mode)
+	+to_transformer_gdf(self)
+	+to_transformer_station_gdf(self)
+}
+odeon.model.energy_network.EnergyNetwork <|-- odeon.model.district_electricity_grid.DistrictElectricityGrid
+@enduml

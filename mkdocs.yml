@@ -1,0 +1,186 @@
+site_name: !ENV [SITE_NAME, "Odeon"]
+site_description: "Data model for district energy system modelling"
+
+repo_url: !ENV [REPO_URL, "https://github.com/Fraunhofer-IEG/enable-odeon"]
+repo_name: !ENV [REPO_NAME, "enable/odeon"]
+
+theme:
+  name: material
+  logo: images/ode2.png
+  favicon: images/ode2.png
+  highlightjs: true
+  hljs_languages:
+    - yaml
+    - python
+  features:
+    - navigation.tracking # Anchor tracking
+    - toc.follow # Table of contents follows is scrolled to active anchor
+    - navigation.path # Adds navigation path at top (e.g. odeon > Building)
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+# Plugins:
+# https://mkdocstrings.github.io/autorefs/
+# https://mkdocstrings.github.io/python/usage/
+# https://github.com/danielfrg/mkdocs-jupyter?tab=readme-ov-file
+# https://github.com/blueswen/mkdocs-glightbox
+plugins:
+  - search
+  - autorefs # To link using anchors with mkdocs
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [src]
+          options:
+            docstring_style: numpy
+            show_if_no_docstring: true
+            docstring_section_style: list
+  - mkdocs-jupyter:
+      execute: false # Execute jupyters before convertion
+      allow_errors: false # Continue with convertion if errors occour
+      include_requirejs: true # RequireJS is required for plotly
+  - glightbox:
+      touchNavigation: false # Enable or disable the touch navigation (swipe).
+      loop: false # Loop slides on end.
+      effect: zoom # Name of the effect on lightbox open. (zoom, fade, none)
+      width: 100% # Default width for inline elements and iframes. You can use any unit for example 90% or 100vw for full width.
+      height: auto # Default height for inline elements and iframes. You can use any unit for example 90%, 100vh or auto.
+      zoomable: true # Enable or disable zoomable images.
+      draggable: true # Enable or disable mouse drag to go prev and next slide.
+  # - build_plantuml:
+  #     render: "server" # or "local" for local rendering
+  #     bin_path: "/usr/local/bin/plantuml" # ignored when render: server
+  #     server: "http://www.plantuml.com/plantuml" # official plantuml server
+  #     disable_ssl_certificate_validation: true # for self-signed and invalid certs
+  #     output_format: "svg" # or "png"
+  #     allow_multiple_roots: false # in case of multiple locations for diagrams (all ending in diagram_root)
+  #     diagram_root: "docs/uml" # should reside under docs_dir
+  #     output_folder: ""
+  #     input_folder: ""
+  #     input_extensions: "" # comma separated list of extensions to parse, by default every file is parsed
+
+# Extensions:
+# Support for keyboard keys, tracking changes in documents, defining sub- and superscript and highlighting text:
+# https://squidfunk.github.io/mkdocs-material/reference/formatting/
+# Support for mermaid diagrams
+# https://squidfunk.github.io/mkdocs-material/reference/diagrams/
+# Support for lists (nested and tasklists)
+# https://squidfunk.github.io/mkdocs-material/reference/lists/
+# Ability to align images, add captions to images (rendering them as figures), and mark large images for lazy-loading:
+# https://squidfunk.github.io/mkdocs-material/reference/images/
+# Nicer Footnotes
+# https://squidfunk.github.io/mkdocs-material/reference/footnotes/
+# Math support (LaTeX)
+# https://squidfunk.github.io/mkdocs-material/reference/math/
+markdown_extensions:
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.details
+  - admonition
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - attr_list
+  - md_in_html
+  - footnotes
+  - pymdownx.arithmatex:
+      generic: true
+
+# Navigation bar
+nav:
+  - "Home": index.md
+  - "About":
+      - "Motivation": about/motivation.md
+      - "Licence": about/licence.md
+  - "User Guide":
+      - "Introduction": user_guide/introduction.md
+      - "Model":
+          - "Units": user_guide/model/units.md
+          - "Projects, Branches and Objects": user_guide/model/projects.md
+          # - "Relations": user_guide/model/relations.md
+          - "Temporals": user_guide/model/temporals.md
+          - "Weather and Environment": user_guide/model/weather_environment.md
+          - "Geometry": user_guide/model/geometry.md
+          - "Buildings":
+              - "Introduction": user_guide/model/buildings/buildings.md
+              - "Building Units": user_guide/model/buildings/building_units.md
+              - "Building Geometry": user_guide/model/buildings/building_geometry.md
+              - "Building Physics": user_guide/model/buildings/building_physics.md
+          - "Assets":
+              - "Introduction": user_guide/model/assets/introduction_assets.md
+              - "Expenses": user_guide/model/assets/expenses.md
+              - "Options and Decisions": user_guide/model/assets/options_decisions.md
+          - "Energy System":
+              - "Introduction": user_guide/model/energy_system/introduction_energy_system.md
+              - "Components and Energy Flow": user_guide/model/energy_system/components.md
+              - "Devices": user_guide/model/energy_system/devices.md
+              - "Networks":
+                  - "Introduction": user_guide/model/energy_system/networks/introduction_networks.md
+                  - "Thermal Grid": user_guide/model/energy_system/networks/thermal_grid.md
+                  - "Electricity Grid": user_guide/model/energy_system/networks/electricity_grid.md
+              - "Integrated modelling": user_guide/model/energy_system/integrated_modelling.md
+      - "Processing": user_guide/processing/processing.md
+      # - "Plotting": user_guide/plotting/plotting.md
+      - "IO":
+          - "Introduction": user_guide/io/io.md
+          - "Temporal Manager": user_guide/io/temporal_manager.md
+          - "File Adapter": user_guide/io/file_adapter.md
+          - "SQLite Adapter": user_guide/io/sqlite_adapter.md
+  - "Examples":
+      - "Project and Branches": examples/project_and_branches.ipynb
+      - "Navigating Hierarchy": examples/navigating_hierarchy.ipynb
+      - "Temporals": examples/temporals.ipynb
+      - "Buildings and Building Units": examples/buildings_and_units.ipynb
+      - "Building Physics and Elements": examples/building_physics_and_elements.ipynb
+      - "Geometric Data": examples/geometry.ipynb
+      - "Building Geometry": examples/building_geometry.ipynb
+      - "Energy Flow": examples/energy_flow.ipynb
+      - "Assets and Expenses": examples/assets_expenses.ipynb
+      - "Devices": examples/devices.ipynb
+      - "Networks": examples/networks.ipynb
+      - "Thermal Grids": examples/thermal_grid.ipynb
+      - "Electricity Grid": examples/electricity_grid.ipynb
+      - "Groups and Clusters": examples/groups_and_clusters.ipynb
+      - "Accessing Demands": examples/accessing_demands.ipynb
+      - "Tips and Tricks": examples/tips_and_tricks.ipynb
+  - "Code Documentation":
+      - "Asset": code_documentation/asset.md
+      - "Base": code_documentation/base.md
+      - "BaseGeometry": code_documentation/base_geometry.md
+      - "Building": code_documentation/building.md
+      - "BuildingElement": code_documentation/building_element.md
+      - "BuildingGeometry": code_documentation/building_geometry.md
+      - "BuildingPhysics": code_documentation/building_physics.md
+      - "BuildingUnit": code_documentation/building_unit.md
+      - "Clustering": code_documentation/clustering.md
+      - "Component": code_documentation/component.md
+      - "Contract": code_documentation/contract.md
+      - "Decision": code_documentation/decision.md
+      - "Device": code_documentation/device.md
+      - "DistrictElectricityGrid": code_documentation/district_electricity_grid.md
+      - "DistrictHeatingNetwork": code_documentation/district_heating_network.md
+      - "Energy": code_documentation/energy.md
+      - "EnergyNetwork": code_documentation/energy_network.md
+      - "EnergySystem": code_documentation/energy_system.md
+      - "Environment": code_documentation/environment.md
+      - "Expense": code_documentation/expense.md
+      - "Geometry": code_documentation/geometry.md
+      - "Network": code_documentation/network.md
+      - "Region": code_documentation/region.md
+      - "StreetGrid": code_documentation/street_grid.md
+      - "Temporal": code_documentation/temporal.md
+      - "Waters": code_documentation/waters.md
